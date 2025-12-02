@@ -18,6 +18,7 @@ function HeaderTable({ Days }) {
                     </TableHead>
                 ))}
                 <TableHead></TableHead>
+                <TableHead></TableHead>
             </TableRow>
         </TableHeader>
     )

@@ -111,8 +111,8 @@ function ReportsTable() {
     return (
         <>
 
-            <div className="relative flex flex-wrap items-center gap-3.5 my-4">
-                <div className="relative w-md -full">
+            <div className="grid md:grid-cols-3 gap-3.5 my-4">
+                <div className="relative col-span-2">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                         placeholder={`بحث ...`}

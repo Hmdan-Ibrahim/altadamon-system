@@ -14,7 +14,7 @@ export const formatMonthYear = (date) => {
 
 export const formatDayMonthYear = (date) => {
   if (!date) return ''
-  return format(date, 'd MMMM yyyy', { locale: ar })
+  return format(date, 'dd MMMM yyyy', { locale: ar })
 }
 
 export const formatDateWithTime = (date) => {

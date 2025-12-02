@@ -3,14 +3,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { MapPin, FolderKanban, School, Truck } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts"
 import { Roles } from "../lib/utils/Entities"
+import { getCountDocs } from "../services/api/api"
+import { useQueries, useQuery } from "@tanstack/react-query"
+import AuthFeature from "../components/gards/AuthFeature"
+import { useAuth } from "../hooks/useAuth"
 
 // Mock data
 const stats = [
-  { name: "المناطق", key: "regions", veiwFor: [Roles.MANAGER], icon: MapPin, color: "text-blue-600" },
-  { name: "المشاريع", key: "projects", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER], icon: FolderKanban, color: "text-purple-600" },
-  { name: "المدارس", key: "schools", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER], icon: School, color: "text-green-600" },
-  { name: "المركبات", key: "vehicles", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR], icon: Truck, color: "text-orange-600" },
-
+  {
+    name: "المناطق", key: "regions", veiwFor: [Roles.MANAGER], icon: MapPin, color: "text-blue-600"
+  },
+  // {
+  //   name: "المشاريع", key: "projects", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER], icon: FolderKanban, color: "text-purple-600"
+  // },
+  {
+    name: "المدارس", key: "schools", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER], icon: School, color: "text-green-600"
+  },
+  {
+    name: "المركبات", key: "vehicles", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR], icon: Truck, color: "text-orange-600"
+  },
 ]
 
 const ordersData = [
@@ -32,31 +43,66 @@ const deliveryData = [
   { month: "يونيو", delivered: 3500 },
 ]
 
+import React, { useMemo } from "react"
+
+const StatCard = React.memo(function StatCard({ stat, query }) {
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+
+          <div>
+            <p className="text-sm text-muted-foreground">{stat.name}</p>
+            <p className="text-3xl font-bold mt-2">
+              {query.isLoading && "جاري التحميل..."}
+              {query.isError && "خطأ!"}
+              {query.isSuccess && query.data}
+            </p>
+          </div>
+
+          <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center ${stat.color}`}>
+            <stat.icon className="w-6 h-6" />
+          </div>
+
+        </div>
+      </CardContent>
+    </Card>
+  )
+})
+
+
+
 function CountDucs() {
-  const user = { name: "ahmed", role: Roles.MANAGER }
+  const { user } = useAuth()
+
+  const allowedStats = useMemo(() => {
+    return stats.filter(stat => stat.veiwFor.includes(user.role))
+  }, [user.role])
+
+
+  const queries = useQueries({
+    queries: allowedStats.map((stat) => ({
+      queryKey: [stat.key, "countDocs"],
+      queryFn: () => getCountDocs(stat.key).then(res => res.data),
+      enabled: !!user
+    }))
+  })
+
+  console.log(queries[0].data);
+
+
   return (
     <>
-      {
-        stats.map((stat) => (
-          < Card key={stat.key}>
-
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.name}</p>
-                  <p className="text-3xl font-bold mt-2">{stat.key}</p>
-                </div>
-                <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center ${stat.color}`}>
-                  <stat.icon className="w-6 h-6" />
-                </div>
-              </div>
-            </CardContent>
-          </Card >
-        ))
+      {allowedStats.map((stat, index) =>
+        <AuthFeature key={stat.key} roles={stat.veiwFor}>
+          <StatCard stat={stat} query={queries[index]} />
+        </AuthFeature>
+      )
       }
     </>
   )
 }
+
 
 export default function Dashboard() {
   return (
@@ -65,51 +111,6 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <CountDucs />
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Orders Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>الطلبات الأسبوعية</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={ordersData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="orders" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Delivery Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>التوصيلات الشهرية</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={deliveryData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="delivered"
-                  stroke="hsl(var(--accent))"
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(var(--accent))" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
       </div>
     </div>
 

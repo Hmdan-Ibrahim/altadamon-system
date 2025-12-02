@@ -6,9 +6,9 @@ import ProjectForm from './ProjectForm'
 function AddEditProject({ project }) {
     const [formOpen, setFormOpen] = useState(false)
     return (
-        <div className="flex justify-end">
-            <Button {...project && { variant: "ghost", size: "icon" }} onClick={() => setFormOpen(true)}>
-                {project ? <Edit className="w-4 h-4" /> :
+        <div className="flex">
+            <Button {...project && { variant: "ghost", size: "icon" }} className="cursor-cell" onClick={() => setFormOpen(true)}>
+                {project ? <Edit className="w-4 h-4 cursor" /> :
                     <>
                         <Plus className="w-4 h-4" />
                         إضافة مشروع

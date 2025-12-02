@@ -7,7 +7,7 @@ function AddEditOrder({ dailyOrder }) {
     const [formOpen, setFormOpen] = useState(false)
 
     return (
-        <div className="flex justify-end">
+        <div className="flex">
             <Button {...dailyOrder && { variant: "ghost", size: "icon" }} onClick={() => setFormOpen(true)}>
                 {dailyOrder ? <Edit className="w-4 h-4" /> :
                     <>

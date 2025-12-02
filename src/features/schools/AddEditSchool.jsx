@@ -6,7 +6,7 @@ import SchoolForm from './SchoolForm';
 function AddEditSchool({ school }) {
     const [formOpen, setFormOpen] = useState(false)
     return (
-        <div className="flex justify-end">
+        <div className="flex">
             <Button {...school && { variant: "ghost", size: "icon" }} onClick={() => setFormOpen(true)}>
                 {school ? <Edit className="w-4 h-4" /> :
                     <>

@@ -24,8 +24,8 @@ function SchoolsTable() {
 
     return (
         <>
-            <div className="flex flex-wrap gap-3.5 my-4">
-                <div className="relative w-md">
+            <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4">
+                <div className="relative flex-1">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                         placeholder={`بحث عن مدرسة ...`}

@@ -39,7 +39,7 @@ export const useDailyOrders = () => {
             const { data } = await getDailyOrdersByProject(matchedProject, filter)
             return data || []
         },
-        enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && (!!matchedProject) && !!date, // حتى لا يُستدعى قبل تحميل المشروع
     })
 
     return { isLoading, dailyOrders, date, error }

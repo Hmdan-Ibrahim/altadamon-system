@@ -40,7 +40,7 @@ function ProjectForm({
                 manager: projectToEdit?.manager?._id || undefined
             }
             : {
-                region: regions?.find(region => region.name === searchParams.get("region"))?._id,
+                // region: regions?.find(region => region.name === searchParams.get("region"))?._id,
             },
     });
     const { errors } = formState;

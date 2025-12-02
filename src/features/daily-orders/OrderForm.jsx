@@ -16,6 +16,7 @@ import { useProjects } from '../projects/useProjects'
 import { Roles, StatusOrder, Wells } from '@/src/lib/utils/Entities'
 import { useVehicles } from '../vehicles/useVehicles copy'
 import { useWells } from '@/src/hooks/useWells'
+import { isAfter, isToday, startOfDay } from 'date-fns'
 
 const operators = [
     { key: "التضامن", label: "التضامن" },
@@ -44,11 +45,10 @@ function OrderForm({
     const isEditSession = !!orderToEdit;
 
     const [searchParams] = useSearchParams()
+    const date = searchParams.get("date")
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id
 
-    const { users: supervisors } = useUsers({ project: projectId, role: Roles.SUPERVISOR })
-
-    const { control, register, handleSubmit, watch, reset, getValues, formState } = useForm({
+    const { control, handleSubmit, watch, reset, formState } = useForm({
         defaultValues: isEditSession
             ? {
                 school: orderToEdit?.school._id || undefined,
@@ -67,9 +67,14 @@ function OrderForm({
     const { errors } = formState;
     const { isLoading: loadVehicles, vehicles } = useVehicles()
     const transporterRole = watch("operator") === "التضامن" ? "سائق" : "مقاول"
-    const { isLoading, users, error } = useUsers({ project: projectId, role: transporterRole })
+    const { isLoading, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
+    const afterToday = isAfter(startOfDay(date), startOfDay(new Date()))
+    console.log("|| isToday(startOfDay(date));", startOfDay(date));
+
 
     function onSubmit(data) {
+
+
         if (isEditSession)
             editOrder(
                 { orderID: orderToEdit._id, order: data },
@@ -82,7 +87,7 @@ function OrderForm({
             );
         else
             createNewOrder(
-                { ...data, sendingDate: searchParams.get("date") || new Date() },
+                { ...data, sendingDate: date || new Date() },
                 {
                     onSuccess: (data) => {
                         reset();
@@ -96,8 +101,8 @@ function OrderForm({
         console.log("Form Errors:", errors);
     }
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-md">
+        <Dialog open={open} onOpenChange={onOpenChange} >
+            <DialogContent className="w-[90%] h-[90%] overflow-auto rounded-xl max-w-md m-auto">
                 <DialogHeader>
                     <DialogTitle>{`${title}`}</DialogTitle>
                 </DialogHeader>
@@ -151,7 +156,7 @@ function OrderForm({
                                     value={field.value}
                                     onValueChange={field.onChange}
                                     disabled={isWorking}
-                                    selectItems={users.map(user => ({ key: user._id, label: user.name }))}
+                                    selectItems={transporters.map(transporter => ({ key: transporter._id, label: transporter.name }))}
                                     className={`${errors.transporter && "border-red-500"}`}
                                 />
                             )}
@@ -231,7 +236,7 @@ function OrderForm({
                         />
                         {errors.well && <p className="text-red-500 text-sm">{errors.well.message}</p>}
                     </div>
-                    <div className="space-y-2">
+                    {!afterToday && <div className="space-y-2">
                         <Controller
                             control={control}
                             name="status"
@@ -249,7 +254,7 @@ function OrderForm({
                             )}
                         />
                         {errors.status && <p className="text-red-500 text-sm">{errors.status.message}</p>}
-                    </div>
+                    </div>}
                     <div className="space-y-2">
                         <Label htmlFor="notes">ملاحظات</Label>
                         <Controller

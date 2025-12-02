@@ -40,7 +40,7 @@ function SchoolForm({
                 supervisor: schoolToEdit?.supervisor?._id || undefined
             }
             : {
-                project: projectId
+                // project: projectId
             },
     });
     const { errors, isSubmitting } = formState;

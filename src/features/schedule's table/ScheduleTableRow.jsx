@@ -4,13 +4,11 @@ import { format } from 'date-fns';
 import React from 'react'
 import { useSearchParams } from 'react-router-dom';
 import { useCreateOrder as useCreateOrders } from '../daily-orders/useCreateOrder';
-import { useProjects } from '../projects/useProjects';
 import { useCreateSchool } from '../schools/useCreateSchool';
 
 function ScheduleTableRow({ schoolId, date, Days, report, index }) {
     const { loading, createNewOrder: createNewOrders } = useCreateOrders()
     const { isCreating, createNewSchool } = useCreateSchool();
-    const [searchParams] = useSearchParams()
 
     const { school, numOfReplaies } = report
     let dailyOrders = [];
@@ -29,10 +27,8 @@ function ScheduleTableRow({ schoolId, date, Days, report, index }) {
         createNewOrders(finalResult);
     }
 
-    const { projects, error } = useProjects()
     const handleCreate = () => {
-        const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id
-        createNewSchool({ name: school, project: projectId });
+        createNewSchool({ name: school });
     }
 
     return (

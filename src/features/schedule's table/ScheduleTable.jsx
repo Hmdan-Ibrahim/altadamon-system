@@ -30,8 +30,8 @@ function ScheduleTable() {
 
     return (
         <>
-            <div className="flex flex-wrap gap-3.5 my-4">
-                <div className="relative w-md">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-3.5 my-4">
+                <div className="relative col-span-3">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                         placeholder={`بحث ...`}
@@ -40,8 +40,10 @@ function ScheduleTable() {
                         className="pr-10"
                     />
                 </div>
-                <ReadExelFile setDataFromFile={setDataFromFile} />
-                {isThisMonthAndAfter && <AddEditScheduleSchool />}
+                <div className="flex gap-3 col-span-2">
+                    <ReadExelFile setDataFromFile={setDataFromFile} />
+                    {isThisMonthAndAfter && <AddEditScheduleSchool />}
+                </div>
             </div>
             <div className="border rounded-lg">
                 <Table className="table-auto">

@@ -7,7 +7,7 @@ import { Roles } from "@/src/lib/utils/Entities";
 function DailyOrdersTableOperations() {
 
     return (
-        <div className="flex gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <ForRoles roles={[Roles.MANAGER]}>
                 <SelectRegion />
             </ForRoles>

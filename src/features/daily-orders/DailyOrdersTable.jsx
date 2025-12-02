@@ -6,17 +6,20 @@ import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import AddEditOrder from './AddEditOrder';
 import DailyOrderRow from './DailyOrderRow';
-import { format } from 'date-fns';
+import { format, isBefore, startOfDay } from 'date-fns';
 import PrintPortal from '@/src/components/layout/PrintPortal';
+import { ar } from 'date-fns/locale';
 
 
 function DailyOrdersTable() {
 
     const [searchTerm, setSearchTerm] = useState("")
     const { isLoading, dailyOrders, date, error } = useDailyOrders()
-    const beforeToday = format(date, "dd MM yyyy") < format(new Date(), "dd MM yyyy")
+    // const beforeToday = format(date, "dd MM yyyy") < format(new Date(), "dd MM yyyy")
+    const beforeToday = isBefore(startOfDay(date), startOfDay(new Date()));
 
-    const filteredOrders = dailyOrders.filter((order) => String(order?.school.name).toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredOrders = dailyOrders?.filter((order) => String(order?.school.name).toLowerCase().includes(searchTerm.toLowerCase())) || []
+    console.log(beforeToday, startOfDay(date), format(date, "dd MM yyyy"), format(new Date(), "dd MM yyyy"), date);
 
     if (isLoading) return <h1>Loading.....</h1>
     if (error) return <Error text={handleError(error)} />
@@ -25,8 +28,8 @@ function DailyOrdersTable() {
 
     return (
         <>
-            <div className="flex flex-wrap gap-3.5 my-4">
-                <div className="relative w-md">
+            <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4">
+                <div className="relative flex-1">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                         placeholder={`بحث عن مدرسة ...`}
@@ -53,8 +56,8 @@ function DailyOrdersTable() {
                                 <TableHead>البئر</TableHead>
                                 <TableHead>السعة</TableHead>
                                 <TableHead>السعر</TableHead>
-                                {/* <TableHead>المبلغ</TableHead> */}
                                 <TableHead>ملاحظات</TableHead>
+                                <TableHead>الاجراءات</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

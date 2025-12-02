@@ -42,9 +42,14 @@ api.interceptors.response.use(
     }
     console.log("api.interceptors.response", Promise.reject(error));
 
-    return Promise.reject(error)
+    Promise.reject(error)
   },
 )
+
+export async function getCountDocs(model) {
+  const res = await api.get(`/${model}/count`)
+  return res.data
+}
 
 export function handleError(error) {
   // If translation function is not provided, use default messages

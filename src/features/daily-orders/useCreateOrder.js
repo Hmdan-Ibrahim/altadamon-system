@@ -14,6 +14,7 @@ export const useCreateOrder = () => {
             queryClient.invalidateQueries({ queryKey: ["daily-orders"] });
         },
         onError: (err) => toast.error(handleError(err)),
+        // enabled: false
     })
 
     return { isEditing, createNewOrder }

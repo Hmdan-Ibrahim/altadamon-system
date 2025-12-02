@@ -1,10 +1,11 @@
+import { format } from 'date-fns'
 import { Button } from './ui/button'
 import { Calendar } from './ui/calendar'
 import { Label } from './ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { formatDayMonthYear, formatMonthYear } from '@/src/lib/utils'
 import { ChevronDownIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 
@@ -13,17 +14,23 @@ function SelectDate({ showDay }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const date = searchParams.get("date")
 
-    if (!date) {
-        searchParams.set("date", new Date().toISOString());
-        setSearchParams(searchParams);
-    }
+    useEffect(() => {
+        if (!date) {
+            searchParams.set("date", format(new Date(), "yyyy-MM-dd"));
+            setSearchParams(searchParams);
+        }
+        console.log("useEffect", searchParams.get("date"), formatDayMonthYear(new Date()), format(new Date(), "yyyy-MM-dd"));
+    }, [searchParams, setSearchParams])
 
+    console.log("select date", date);
 
     function handleChange(value) {
         if (!value) return;
         const newDate = value.toISOString();
         searchParams.set("date", newDate);
         setSearchParams(searchParams);
+
+        console.log("handleChange", searchParams.get("date"), newDate, value);
     }
 
     return (
@@ -36,7 +43,7 @@ function SelectDate({ showDay }) {
                     <Button
                         variant="outline"
                         id="date"
-                        className="w-48 justify-between font-normal"
+                        className="justify-between font-normal"
                     >
                         {date ?
                             showDay ? formatDayMonthYear(date) : formatMonthYear(date) : "اختر تاريخ"}
@@ -47,7 +54,7 @@ function SelectDate({ showDay }) {
                     <Calendar
                         mode="single"
                         timeZone="UTC"
-                        selected={date}
+                        selected={format(date, "yyyy-MM-dd")}
                         captionLayout="dropdown"
                         onSelect={(date) => {
                             handleChange(date)
