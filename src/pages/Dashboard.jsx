@@ -13,9 +13,9 @@ const stats = [
   {
     name: "المناطق", key: "regions", veiwFor: [Roles.MANAGER], icon: MapPin, color: "text-blue-600"
   },
-  // {
-  //   name: "المشاريع", key: "projects", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER], icon: FolderKanban, color: "text-purple-600"
-  // },
+  {
+    name: "المشاريع", key: "projects", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER], icon: FolderKanban, color: "text-purple-600"
+  },
   {
     name: "المدارس", key: "schools", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER], icon: School, color: "text-green-600"
   },
