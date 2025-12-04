@@ -12,7 +12,9 @@ function ReportsTableOperations() {
             <ForRoles roles={[Roles.MANAGER]}>
                 <SelectRegion />
             </ForRoles>
-            <SelectProject />
+            <ForRoles roles={[Roles.MANAGER, Role.REGION_MANAGER]}>
+                <SelectProject />
+            </ForRoles>
             <SelectDate showDay={true} />
             <SelectReportType />
         </div>
