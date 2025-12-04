@@ -5,9 +5,11 @@ import { useProjects } from '../projects/useProjects'
 import { getReports } from '@/src/services/api/reportServices'
 import { format } from 'date-fns'
 import { StatusOrder } from '@/src/lib/utils/Entities'
+import { useAuth } from '@/src/hooks/useAuth'
 
 export const useReports = () => {
 
+    const {user} = useAuth()
     const [searchParams, setSearchParams] = useSearchParams()
     const { isLoading: loadingProjects, projects = [] } = useProjects()
     const [regionState, setRegoin] = useState("")
@@ -32,7 +34,7 @@ export const useReports = () => {
 
 
     const matchedProject = projects.find(p => p.name === project);
-    const filter = { project: matchedProject?._id, sendingDate: date, status: StatusOrder.IMPLEMENTED };
+    const filter = { project: matchedProject?._id || user?.project, sendingDate: date, status: StatusOrder.IMPLEMENTED };
 
     const { isLoading, data: reports = [], error } = useQuery({
         queryKey: ["reports", { ...filter, date: format(date, "MM yyyy") }],
