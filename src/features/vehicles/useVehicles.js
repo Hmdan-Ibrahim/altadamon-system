@@ -22,14 +22,14 @@ export const useVehicles = () => {
 
     filterValue = searchParams.get("project")
 
-  const matchedProject = projects.find(p => p.name === filterValue)?._id || user.project;
+  const matchedProject = projects.find(p => p.name === filterValue)?._id || user?.project;
     const filter = { project: matchedProject };
 
     const { isLoading, data: vehicles = [], error } = useQuery({
         queryKey: ["vehicles", filterValue],
         queryFn: async () => {
             const { data } = await getVehicles(filter)
-            return (data && filterValue ? data : [])
+            return data || []
         },
         enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
     })
