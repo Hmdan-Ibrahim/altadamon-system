@@ -29,6 +29,8 @@ function ReportsTable() {
 
     const { isLoading, reports, projectName, date, error } = useReports()
 
+    console.log("reports", reports)
+
     const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
 
@@ -44,7 +46,7 @@ function ReportsTable() {
         );
     }, [reports.reports, searchTerm, cons]);
 
-
+  console.log("filteredReports", filteredReports)
     const totals = useMemo(() => {
 
         // اليوم المختار من التاريخ
