@@ -40,9 +40,9 @@ export const useReports = () => {
         queryKey: ["reports", { ...filter, date: format(date, "MM yyyy") }],
         queryFn: async () => {
             const { data } = await getReports(filter)
-            return (data && project ? data : [])
+            return data || []
         },
-        enabled: !loadingProjects || (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
     })
 
     return { isLoading, reports, projectName: project, date, error }
