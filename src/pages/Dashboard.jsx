@@ -17,7 +17,7 @@ const stats = [
     name: "المشاريع", key: "projects", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER], icon: FolderKanban, color: "text-purple-600"
   },
   {
-    name: "المدارس", key: "schools", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER], icon: School, color: "text-green-600"
+    name: "المدارس", key: "schools", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR], icon: School, color: "text-green-600"
   },
   {
     name: "المركبات", key: "vehicles", veiwFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR], icon: Truck, color: "text-orange-600"
