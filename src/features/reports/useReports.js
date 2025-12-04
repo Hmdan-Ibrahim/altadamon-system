@@ -33,8 +33,8 @@ export const useReports = () => {
     project = searchParams.get("project")
 
 
-    const matchedProject = projects.find(p => p.name === project);
-    const filter = { project: matchedProject?._id || user?.project, sendingDate: date, status: StatusOrder.IMPLEMENTED };
+    const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
+    const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED };
 
     const { isLoading, data: reports = [], error } = useQuery({
         queryKey: ["reports", { ...filter, date: format(date, "MM yyyy") }],
@@ -42,7 +42,7 @@ export const useReports = () => {
             const { data } = await getReports(filter)
             return (data && project ? data : [])
         },
-        enabled: !loadingProjects && projects.length > 0, // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects || (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
     })
 
     return { isLoading, reports, projectName: project, date, error }
