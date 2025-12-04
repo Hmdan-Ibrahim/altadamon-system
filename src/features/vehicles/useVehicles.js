@@ -3,9 +3,10 @@ import { useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useProjects } from '../projects/useProjects'
 import { getVehicles } from '@/src/services/api/vehicleServices'
+import { useAuth } from '@/src/hooks/useAuth'
 
 export const useVehicles = () => {
-
+ const { user } = useAuth()
     const [searchParams, setSearchParams] = useSearchParams()
     const { isLoading: loadingProjects, projects = [] } = useProjects()
 
@@ -21,9 +22,10 @@ export const useVehicles = () => {
 
     filterValue = searchParams.get("project")
 
+  const matchedProject = projects.find(p => p.name === filterValue)?._id || user.project;
+    const filter = { project: matchedProject };
 
-    const matchedProject = projects.find(p => p.name === filterValue);
-    const filter = { project: matchedProject?._id };
+    const filter = { project: matchedProject};
 
     const { isLoading, data: vehicles = [], error } = useQuery({
         queryKey: ["vehicles", filterValue],
@@ -31,7 +33,7 @@ export const useVehicles = () => {
             const { data } = await getVehicles(filter)
             return (data && filterValue ? data : [])
         },
-        enabled: !loadingProjects && projects.length > 0, // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
     })
 
     return { isLoading, vehicles, error }
