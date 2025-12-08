@@ -8,7 +8,7 @@ import SelectReportType from "./SelectReportType";
 function ReportsTableOperations() {
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-4">
             <ForRoles roles={[Roles.MANAGER]}>
                 <SelectRegion />
             </ForRoles>
@@ -17,6 +17,7 @@ function ReportsTableOperations() {
             </ForRoles>
             <SelectDate showDay={true} />
             <SelectReportType />
+            <SelectGroupBy />
         </div>
     );
 }
