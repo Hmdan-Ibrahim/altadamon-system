@@ -1,7 +1,7 @@
 import SelectCom from "@/src/components/SelectCom";
 import { useSearchParams } from "react-router-dom";
 
-const groupBy = [
+export const groupBy = [
     { key: "transporter", label: "الموصلين" },
     { key: "school", label: "المدارس" }
 ]
