@@ -16,6 +16,7 @@ export const useReports = () => {
     let project = searchParams.get("project")
     let region = searchParams.get("region")
     let date = searchParams.get("date")
+    let groupBy = searchParams.get("groupBy")
 
     const changedRegion = regionState === !region
 
@@ -28,13 +29,13 @@ export const useReports = () => {
             setSearchParams(newParams);
             setRegoin(region)
         }
-    }, [projects, project, setSearchParams]);
+    }, [projects,groupBy, project, setSearchParams]);
 
     project = searchParams.get("project")
 
 
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
-    const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED };
+    const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy };
 
     const { isLoading, data: reports = [], error } = useQuery({
         queryKey: ["reports", { ...filter, date: format(date, "MM yyyy") }],
