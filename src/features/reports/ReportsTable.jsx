@@ -47,7 +47,7 @@ function ReportsTable() {
         );
     }, [reports.reports, searchTerm, cons]);
 
-  console.log("filteredReports", filteredReports)
+    console.log("filteredReports", filteredReports)
     const totals = useMemo(() => {
 
         // اليوم المختار من التاريخ
@@ -127,17 +127,17 @@ function ReportsTable() {
                 {filteredReports?.length !== 0 && <div className="flex gap-3.5">
                     <Input type="checkbox" className="max-w-6" checked={showDays} onChange={e => setShowDays(!showDays)} />
                     <Label className={"min-w-fit"}>اظهار الايام</Label>
-                    { isTransporter && <>
+                    {isTransporter && <>
                         <Input type="checkbox" className="max-w-6" checked={cons} onChange={e => setCons(!cons)} />
                         <Label className={"min-w-fit"}>بحث المشغل</Label>
-                     </>
+                    </>
                     }
                 </div>}
             </div>
             <PrintPortal>
                 <div className="border rounded-lg on-print m-2">
                     <h1 className="text-center my-5">
-                        تقرير شهري انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
+                        {reportType.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
                     </h1>
 
                     <Table className="table-auto m-2">
@@ -157,7 +157,7 @@ function ReportsTable() {
                         </TableBody>
                         {filteredReports?.length !== 0 && <TableFooter className="bg-gray-400">
                             <TableRow>
-                                <TableCell className="text-start pr-50 text-lg" colSpan={5 + Days.length}>الإجمالي</TableCell>
+                                <TableCell className="text-start pr-50 text-lg" colSpan={+(isTransporter ? 5 : 3) + Days.length}>الإجمالي</TableCell>
                                 {reportType === "تقرير شهري" && <>
                                     <TableCell >{totals.totalOrdersByDay}</TableCell>
                                     <TableCell >{totals.totalTonsByDay}</TableCell>

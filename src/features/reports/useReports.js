@@ -6,11 +6,11 @@ import { getReports } from '@/src/services/api/reportServices'
 import { format } from 'date-fns'
 import { StatusOrder } from '@/src/lib/utils/Entities'
 import { useAuth } from '@/src/hooks/useAuth'
-import { groupBy as groupByItems} from "./SelectGroupBy"
+import { groupByItems as groupByItems } from "./SelectGroupBy"
 
 export const useReports = () => {
 
-    const {user} = useAuth()
+    const { user } = useAuth()
     const [searchParams, setSearchParams] = useSearchParams()
     const { isLoading: loadingProjects, projects = [] } = useProjects()
     const [regionState, setRegoin] = useState("")
@@ -30,11 +30,11 @@ export const useReports = () => {
             setSearchParams(newParams);
             setRegoin(region)
         }
-    }, [projects,groupBy, project, setSearchParams]);
+    }, [projects, groupBy, project, setSearchParams]);
 
     project = searchParams.get("project")
 
-    groupBy = groupByItems.find(g => g.name === groupBy)?.key || "transporter"
+    groupBy = groupByItems.find(g => g.label === groupBy)?.key || "transporter"
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
     const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy };
 

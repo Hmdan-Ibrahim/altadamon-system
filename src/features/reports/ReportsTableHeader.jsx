@@ -1,16 +1,24 @@
 import { TableHead, TableHeader, TableRow } from '@/src/components/ui/table'
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function ReportsTableHeader({ Days, reportType }) {
     console.log("ReportsTableHeader");
+    const [searchParams] = useSearchParams()
+    const groupBy = searchParams.get("groupBy")
+    const isTransporter = groupBy == "الموصلين"
 
     return (
         <TableHeader>
             <TableRow className="text-[12px]">
                 <TableHead>م</TableHead>
-                <TableHead>الاسم/المقاول</TableHead>
-                <TableHead>المشغل</TableHead>
-                <TableHead>السيارة</TableHead>
+                <TableHead>{isTransporter ? "الاسم/المقاول" : "المدرسة"}</TableHead>
+                {
+                    isTransporter && <>
+                        <TableHead>المشغل</TableHead>
+                        <TableHead>السيارة</TableHead>
+                    </>
+                }
                 <TableHead>السعة</TableHead>
                 {Days.map(day => <TableHead key={day} className="bg-green-300 border border-green-400 min-w-10 text-center">{day}</TableHead>)}
                 {reportType === "تقرير شهري" && <>

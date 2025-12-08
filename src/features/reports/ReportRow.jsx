@@ -15,9 +15,16 @@ function getStyleWithOperator(operator) {
 function ReportRow({ reportType, showDays, report, index }) {
     const [searchParams] = useSearchParams()
     const date = searchParams.get("date")
-    const { transporter, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, totalPrice } = report
-    const { name='-', accountName='-', accountNumber='-', trip='-' } = transporter
-    
+    const groupBy = searchParams.get("groupBy")
+    const isTransporter = groupBy == "الموصلين"
+
+    const { transporter, school, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, totalPrice } = report
+
+    console.log("isTransporter", isTransporter, school);
+
+
+    const { name = '-', accountName = '-', accountNumber = '-', trip = '-' } = transporter || {}
+
     const year = new Date(date).getFullYear()
     const month = new Date(date).getMonth() + 1
     const lengthMonth = getDaysInMonth(year, month)
@@ -27,7 +34,7 @@ function ReportRow({ reportType, showDays, report, index }) {
         const map = {};
         detailsOfDays?.forEach(d => {
             const dayNum = new Date(d.day).getDate();
-            map[dayNum] = d; // { totalOrders, totalCapacity, ... }
+            map[dayNum] = d;
         });
         return map;
     }, [detailsOfDays]);
@@ -35,9 +42,15 @@ function ReportRow({ reportType, showDays, report, index }) {
     return (
         <TableRow className={getStyleWithOperator(operator)}>
             <TableCell>{index}</TableCell>
-            <TableCell className=" text-start min-w-4">{operator == "ي-كاش" ? "مشتريات" : name}</TableCell>
-            <TableCell>{operator == "ي-كاش" ? "" : operator}</TableCell>
-            <TableCell>{vehicle || "-"}</TableCell>
+            {
+                isTransporter ?
+                    <>
+                        <TableCell className=" text-start min-w-4">{operator == "ي-كاش" ? "مشتريات" : name}</TableCell>
+                        <TableCell>{operator == "ي-كاش" ? "" : operator}</TableCell>
+                        <TableCell>{vehicle || "-"}</TableCell>
+                    </> :
+                    <TableCell className=" text-start min-w-4">{school}</TableCell>
+            }
             <TableCell>{RequiredCapacity}</TableCell>
 
             {showDays && numDays.map(day =>
@@ -68,8 +81,8 @@ function ReportRow({ reportType, showDays, report, index }) {
                 </>
             }
             {reportType === "استحقاق المشروع" && <>
-                <TableCell>{ accountName }</TableCell>
-                <TableCell>{ accountNumber }</TableCell>
+                <TableCell>{accountName}</TableCell>
+                <TableCell>{accountNumber}</TableCell>
             </>}
             {
                 (reportType === "ايرادات المشروع") && <>
