@@ -15,8 +15,8 @@ function getStyleWithOperator(operator) {
 function ReportRow({ reportType, showDays, report, index }) {
     const [searchParams] = useSearchParams()
     const date = searchParams.get("date")
-    const { transporter, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, trip, totalPrice } = report
-    const { name='-', accountName='-', accountNumber='-' } = transporter
+    const { transporter, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, totalPrice } = report
+    const { name='-', accountName='-', accountNumber='-', trip='-' } = transporter
     
     const year = new Date(date).getFullYear()
     const month = new Date(date).getMonth() + 1
@@ -36,7 +36,7 @@ function ReportRow({ reportType, showDays, report, index }) {
         <TableRow className={getStyleWithOperator(operator)}>
             <TableCell>{index}</TableCell>
             <TableCell className=" text-start min-w-4">{operator == "ي-كاش" ? "مشتريات" : name}</TableCell>
-            <TableCell>{operator == "ي-كاش" ? "كاش" : operator}</TableCell>
+            <TableCell>{operator == "ي-كاش" ? "" : operator}</TableCell>
             <TableCell>{vehicle || "-"}</TableCell>
             <TableCell>{RequiredCapacity}</TableCell>
 
