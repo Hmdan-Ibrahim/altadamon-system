@@ -6,6 +6,7 @@ import { getReports } from '@/src/services/api/reportServices'
 import { format } from 'date-fns'
 import { StatusOrder } from '@/src/lib/utils/Entities'
 import { useAuth } from '@/src/hooks/useAuth'
+import { groupBy as groupByItems} from "./SelectGroupBy"
 
 export const useReports = () => {
 
@@ -33,7 +34,7 @@ export const useReports = () => {
 
     project = searchParams.get("project")
 
-
+    groupBy = groupByItems.find(g => g.name === groupBy)?.key || "transporter"
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
     const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy };
 
