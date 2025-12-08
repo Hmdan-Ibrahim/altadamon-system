@@ -21,7 +21,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{supervisor?.name}</TableCell>
             <TableCell className='min-w-fit'>{transporter?.name}</TableCell>
             <TableCell>{vehicle.plateNumber || '-'}</TableCell>
-            <TableCell>{operator}</TableCell>
+            <TableCell>{operator == "ي-كاش" ? "مشتريات" : operator}</TableCell>
             <TableCell>{formatDayMonthYear(sendingDate, "dd MMMM yyyy")}</TableCell>
             <TableCell>{formatDateWithTime(executionTime) || "-"}</TableCell>
             <TableCell>{well?.name}</TableCell>
