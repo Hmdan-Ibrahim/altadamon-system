@@ -22,6 +22,7 @@ function ReportsTable() {
     const notesRef = useRef({});
     const [searchParams] = useSearchParams();
     const reportType = searchParams.get("report");
+    const isTransporter = searchParams.get("groupBy") == "الموصلين";
 
     const [searchTerm, setSearchTerm] = useState("")
     const [showDays, setShowDays] = useState(false)
@@ -67,7 +68,7 @@ function ReportsTable() {
             const capacity = report.RequiredCapacity;
 
             revenueAmount += 11 * report.totalCapacity
-            commission += report.trip * report.monthlyOrders || 0;
+            commission += report?.transporter?.trip * report.monthlyOrders || 0;
 
             report.detailsOfDays?.forEach(d => {
                 const dayNum = new Date(d.day).getDate();
@@ -126,8 +127,11 @@ function ReportsTable() {
                 {filteredReports?.length !== 0 && <div className="flex gap-3.5">
                     <Input type="checkbox" className="max-w-6" checked={showDays} onChange={e => setShowDays(!showDays)} />
                     <Label className={"min-w-fit"}>اظهار الايام</Label>
-                    <Input type="checkbox" className="max-w-6" checked={cons} onChange={e => setCons(!cons)} />
-                    <Label className={"min-w-fit"}>بحث المشغل</Label>
+                    { isTransporter && <>
+                        <Input type="checkbox" className="max-w-6" checked={cons} onChange={e => setCons(!cons)} />
+                        <Label className={"min-w-fit"}>بحث المشغل</Label>
+                     </>
+                    }
                 </div>}
             </div>
             <PrintPortal>
