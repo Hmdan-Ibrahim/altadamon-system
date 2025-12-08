@@ -8,6 +8,6 @@ export async function getReports(filter) {
 
     } catch (error) {
         console.log("Error getReports", error);
-        return error
+        throw error
     }
 }
