@@ -10,6 +10,8 @@ const reportsTypes = [
 function SelectReportType() {
     const [searchParams, setSearchParams] = useSearchParams();
     const reportType = searchParams.get("report")
+     const isNotTransporter = searchParams.get("groupBy") !== "الموصلين"
+    
     if (!reportType) {
         searchParams.set("report", reportsTypes[0].key);
         setSearchParams(searchParams);
@@ -22,7 +24,7 @@ function SelectReportType() {
     }
 
     return (
-        <SelectCom value={searchParams.get("report")} label={"نوع التقرير"} onValueChange={handleChange} selectItems={items} />
+        <SelectCom value={isNotTransporter ? reportType : reportsTypes[0].label} label={"نوع التقرير"} disabled={isNotTransporter} onValueChange={handleChange} selectItems={items} />
     );
 }
 
