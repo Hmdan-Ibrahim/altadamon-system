@@ -140,7 +140,7 @@ function ReportsTable() {
                         {reportType.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
                     </h1>
 
-                    <Table className="table-auto m-2">
+                    <Table className="table-auto">
                         <ReportsTableHeader showDays={showDays} Days={Days} reportType={reportType} />
                         <TableBody>
                             {filteredReports?.length === 0 ? (
