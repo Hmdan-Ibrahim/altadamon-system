@@ -13,15 +13,15 @@ import SelectCom from '@/src/components/SelectCom'
 import { useSchools } from '../schools/useSchools'
 import { useSearchParams } from 'react-router-dom'
 import { useProjects } from '../projects/useProjects'
-import { Roles, StatusOrder, Wells } from '@/src/lib/utils/Entities'
+import { StatusOrder } from '@/src/lib/utils/Entities'
 import { useVehicles } from '../vehicles/useVehicles'
 import { useWells } from '@/src/hooks/useWells'
-import { isAfter, isToday, startOfDay } from 'date-fns'
+import { isAfter, startOfDay } from 'date-fns'
 
 const operators = [
     { key: "التضامن", label: "التضامن" },
     { key: "مقاول", label: "مقاول" },
-    { key: "مشتريات", label: "مشتريات" },
+    { key: "ي-كاش", label: "مشتريات" },
 ]
 const status = [
     { key: StatusOrder.IMPLEMENTED, label: StatusOrder.IMPLEMENTED },
@@ -48,19 +48,19 @@ function OrderForm({
     const date = searchParams.get("date")
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id
 
-    const { control, handleSubmit, watch, reset, formState } = useForm({
+    const { control, handleSubmit, watch, getValues, reset, formState } = useForm({
         defaultValues: isEditSession
             ? {
                 school: orderToEdit?.school._id || undefined,
-                operator: orderToEdit?.operator || undefined,
-                transporter: orderToEdit?.transporter || undefined,
+                operator: operators.find(op => orderToEdit?.operator == op.key)?.key || undefined,
+                transporter: orderToEdit?.transporter._id || undefined,
                 RequiredCapacity: orderToEdit?.RequiredCapacity || undefined,
                 replyPrice: orderToEdit?.replyPrice || undefined,
+                well: orderToEdit?.well._id || undefined,
                 status: orderToEdit?.status || undefined,
                 notes: orderToEdit?.notes || undefined,
             }
             : {
-                // operator: operators[0].key,
                 project: projectId
             },
     });
@@ -69,7 +69,7 @@ function OrderForm({
     const transporterRole = watch("operator") === "التضامن" ? "سائق" : "مقاول"
     const { isLoading, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
     const afterToday = isAfter(startOfDay(date), startOfDay(new Date()))
-    console.log("|| isToday(startOfDay(date));", startOfDay(date));
+    console.log("|| isToday(startOfDay(date));", startOfDay(date), "getttt", getValues(), orderToEdit);
 
 
     function onSubmit(data) {
@@ -145,7 +145,7 @@ function OrderForm({
                         />
                         {errors.operator && <p className="text-red-500 text-sm">{errors.operator.message}</p>}
                     </div>
-                    {watch("operator") !== "مشتريات" && <div className="space-y-2">
+                    {watch("operator") !== "ي-كاش" && <div className="space-y-2">
                         <Controller
                             control={control}
                             name="transporter"

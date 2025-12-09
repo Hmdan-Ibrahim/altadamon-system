@@ -31,9 +31,10 @@ export const useSchools = () => {
         }
     }, [projects, regionParam, setSearchParams])
 
+    console.log("supervisor: user?._id", user?._id)
 
     const matchedProject = projects.find(p => p.name === projectParam)?._id || user.project;
-    const filter = { project: matchedProject };
+    const filter = { project: matchedProject, supervisor: user?._id };
 
     const { isLoading, data: schools = [], error } = useQuery({
         queryKey: ["schools", filter],

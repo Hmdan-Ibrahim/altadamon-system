@@ -4,11 +4,11 @@ import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useDeleteOrder } from './useDeleteOrder'
 
-function DeleteOrder({ orderName, orderID }) {
+function DeleteOrder({ orderName, dailyOrderId }) {
     const { isDeleting, deleteOrder } = useDeleteOrder()
     const [deleteOpen, setDeleteOpen] = useState(false)
     const handleDelete = () => {
-        deleteOrder(orderID)
+        deleteOrder(dailyOrderId)
         setDeleteOpen(false)
     }
     return (
