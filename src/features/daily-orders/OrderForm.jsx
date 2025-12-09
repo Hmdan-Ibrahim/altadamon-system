@@ -53,10 +53,10 @@ function OrderForm({
             ? {
                 school: orderToEdit?.school._id || undefined,
                 operator: operators.find(op => orderToEdit?.operator == op.key)?.key || undefined,
-                transporter: orderToEdit?.transporter._id || undefined,
+                transporter: orderToEdit?.transporter?._id || undefined,
                 RequiredCapacity: orderToEdit?.RequiredCapacity || undefined,
                 replyPrice: orderToEdit?.replyPrice || undefined,
-                well: orderToEdit?.well._id || undefined,
+                well: orderToEdit?.well?._id || undefined,
                 status: orderToEdit?.status || undefined,
                 notes: orderToEdit?.notes || undefined,
             }
