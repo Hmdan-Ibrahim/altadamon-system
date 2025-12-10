@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useProjects } from '../projects/useProjects'
 import { getSchools } from '@/src/services/api/schoolServices'
 import { useAuth } from '@/src/hooks/useAuth'
+import { Roles } from '@/src/lib/utils/Entities'
 
 export const useSchools = () => {
     const { user } = useAuth()
