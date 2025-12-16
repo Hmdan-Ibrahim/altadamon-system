@@ -16,7 +16,6 @@ export const useSchools = () => {
 
     useEffect(() => {
         if (projects.length > 0) {
-            // إذا لم يوجد project بالرابط أو لا ينتمي للمنطقة المحددة
             if (!projectParam || !projects.find(p => p.name === projectParam)) {
                 // const newParams = new URLSearchParams(searchParams)
                 searchParams.set("project", projects[0].name)
@@ -32,8 +31,8 @@ export const useSchools = () => {
         }
     }, [projects, regionParam, setSearchParams])
 
-    const matchedProject = projects.find(p => p.name === projectParam)?._id || user.project;
-    const filter = { project: matchedProject, supervisor: user.role == Roles.SUPERVISOR ? user._id : undefined };
+    const matchedProject = projects.find(p => p.name === projectParam)?._id || user?.project;
+    const filter = { project: matchedProject, supervisor: user?.role == Roles.SUPERVISOR ? user?._id : undefined };
 
     const { isLoading, data: schools = [], error } = useQuery({
         queryKey: ["schools", filter],
@@ -41,7 +40,7 @@ export const useSchools = () => {
             const { data } = await getSchools(filter)
             return data || []
         },
-        enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && (!!matchedProject), 
     })
 
     return { isLoading, schools, error }
