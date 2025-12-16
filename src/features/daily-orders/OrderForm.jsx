@@ -69,8 +69,6 @@ function OrderForm({
     const transporterRole = watch("operator") === "التضامن" ? "سائق" : "مقاول"
     const { isLoading, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
     const afterToday = isAfter(startOfDay(date), startOfDay(new Date()))
-    console.log("|| isToday(startOfDay(date));", startOfDay(date), "getttt", getValues(), orderToEdit);
-
 
     function onSubmit(data) {
 
@@ -217,25 +215,27 @@ function OrderForm({
                             {errors.replyPrice && <p className="text-red-500 text-sm">{errors.replyPrice.message}</p>}
                         </div>
                     }
-                    <div className="space-y-2">
-                        <Controller
-                            control={control}
-                            name="well"
-
-                            rules={{ required: "هذا الحقل مطلوب" }}
-                            render={({ field }) => (
-                                <SelectCom
-                                    label={"البئر"}
-                                    value={field.value}
-                                    onValueChange={field.onChange}
-                                    disabled={isWorking}
-                                    selectItems={wells.map(well => ({ key: well._id, label: well.name }))}
-                                    className={`${errors.well && "border-red-500"}`}
-                                />
-                            )}
-                        />
-                        {errors.well && <p className="text-red-500 text-sm">{errors.well.message}</p>}
-                    </div>
+                    {watch("operator") === "التضامن" &&
+                        <div className="space-y-2">
+                            <Controller
+                                control={control}
+                                name="well"
+    
+                                rules={{ required: "هذا الحقل مطلوب" }}
+                                render={({ field }) => (
+                                    <SelectCom
+                                        label={"البئر"}
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                        disabled={isWorking}
+                                        selectItems={wells.map(well => ({ key: well._id, label: well.name }))}
+                                        className={`${errors.well && "border-red-500"}`}
+                                    />
+                                )}
+                            />
+                            {errors.well && <p className="text-red-500 text-sm">{errors.well.message}</p>}
+                        </div>
+                    }
                     {!afterToday && <div className="space-y-2">
                         <Controller
                             control={control}
