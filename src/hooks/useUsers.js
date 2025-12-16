@@ -5,9 +5,7 @@ import { useAuth } from './useAuth'
 export const useUsers = (filters, options = {}) => {
     const { user } = useAuth()
     const { enabled = true } = options
-    console.log("users filters", filters);
     if (!filters?.project) filters = { ...filters, project: user?.project }
-    console.log("users filters", filters);
 
     const { isLoading, data: users = [], error } = useQuery({
         queryKey: ["users", filters],
