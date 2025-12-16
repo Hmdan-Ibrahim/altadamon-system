@@ -18,11 +18,7 @@ function ReportRow({ reportType, showDays, report, index }) {
     const groupBy = searchParams.get("groupBy")
     const isTransporter = groupBy == "الموصلين"
 
-    const { transporter, school, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, totalPrice } = report
-
-    console.log("isTransporter", isTransporter, school);
-
-
+    const { transporter, school, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, monthlyPrice } = report
     const { name = '-', accountName = '-', accountNumber = '-', trip = '-' } = transporter || {}
 
     const year = new Date(date).getFullYear()
@@ -75,9 +71,9 @@ function ReportRow({ reportType, showDays, report, index }) {
                 (reportType === "تقرير شهري" || reportType === "استحقاق المشروع") && <>
                     <TableCell>{replyPrice}</TableCell>
                     {reportType === "تقرير شهري" && <>
-                        <TableCell>{replyPrice * (daysMap[new Date(date).getDate()]?.totalOrders ?? 0) || 0}</TableCell>
+                        <TableCell>{+(replyPrice * (daysMap[new Date(date).getDate()]?.totalOrders)).toFixed(3) || 0}</TableCell>
                     </>}
-                    <TableCell>{totalPrice}</TableCell>
+                    <TableCell>{monthlyPrice}</TableCell>
                 </>
             }
             {reportType === "استحقاق المشروع" && <>
