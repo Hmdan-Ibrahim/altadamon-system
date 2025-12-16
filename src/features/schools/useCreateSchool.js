@@ -13,8 +13,6 @@ export const useCreateSchool = () => {
     const [searchParams] = useSearchParams()
     const { projects, error } = useProjects()
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id || user?.project
-    console.log("projectIdprojectId", projectId);
-
 
     const { isLoading: isCreating, mutate: createNewSchool } = useMutation({
         mutationFn: async (data) => {
