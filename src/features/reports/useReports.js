@@ -22,7 +22,6 @@ export const useReports = () => {
     const changedRegion = regionState === !region
 
     useEffect(() => {
-        // إذا لم يكن هناك region في الرابط، نعيّنه لأول منطقة
         if ((!project || changedRegion) && projects.length) {
             const newParams = new URLSearchParams(searchParams);
             newParams.set("project", projects[0]?.name);
@@ -39,7 +38,7 @@ export const useReports = () => {
     const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy };
 
     const { isLoading, data: reports = [], error } = useQuery({
-        queryKey: ["reports", { ...filter, date: format(date, "MM yyyy") }],
+        queryKey: ["reports", { ...filter, sendingDate: '', date: format(date, "MM yyyy") }],
         queryFn: async () => {
             const { data } = await getReports(filter)
             return data || []
