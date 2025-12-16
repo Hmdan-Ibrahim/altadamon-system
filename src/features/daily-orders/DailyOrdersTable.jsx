@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/src/components/ui/table';
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { handleError } from '@/src/services/api/api';
 import { useDailyOrders } from './useDailyOrders';
 import { Search } from 'lucide-react';
