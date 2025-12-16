@@ -11,9 +11,6 @@ import { useSearchParams } from 'react-router-dom';
 import ReportsTableHeader from './ReportsTableHeader';
 import { formatDayMonthYear, getDayName } from '@/src/lib/utils';
 
-
-
-
 export function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
 }
@@ -30,8 +27,6 @@ function ReportsTable() {
 
     const { isLoading, reports, projectName, date, error } = useReports()
 
-    console.log("reports", reports)
-
     const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
 
@@ -40,33 +35,27 @@ function ReportsTable() {
 
         return (
             reports.reports?.filter((r) =>
-                String(r?.[key] || "")
+                String(r?.[key]?.name || r?.[key] || "")
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
             ) || []
         );
     }, [reports.reports, searchTerm, cons]);
 
-    console.log("filteredReports", filteredReports)
     const totals = useMemo(() => {
-
-        // اليوم المختار من التاريخ
         const selectedDay = new Date(date).getDate();
 
-        // إجماليات
-        let totalOrdersByDay = 0;       // إجمالي ردود اليوم لجميع المدارس
-        let totalTonsByDay = 0;         // إجمالي أطنان اليوم لجميع المدارس
-        let totalOrdersMonth = 0;       // إجمالي ردود الشهر
-        let totalTonsMonth = 0;         // إجمالي أطنان الشهر
-        let totalPriceByDay = 0;        // إجمالي دخولية اليوم
-        let totalPriceMonth = 0;        // إجمالي الدخولية
-        let revenueAmount = 0;        // إجمالي الترب
-        let commission = 0;        // إجمالي الترب
+        let totalOrdersByDay = 0;       
+        let totalTonsByDay = 0;         
+        let totalOrdersMonth = 0;     
+        let totalTonsMonth = 0;         
+        let totalPriceByDay = 0;        
+        let totalPriceMonth = 0;       
+        let revenueAmount = 0;        
+        let commission = 0;        
 
         filteredReports.forEach(report => {
-
             const capacity = report.RequiredCapacity;
-
             revenueAmount += 11 * report.totalCapacity
             commission += report?.transporter?.trip * report.monthlyOrders || 0;
 
@@ -75,19 +64,17 @@ function ReportsTable() {
                 const orders = d.totalOrders || 0;
                 const replyPrice = report.replyPrice || 0;
 
-                // إجمالي اليوم المحدد
                 if (dayNum === selectedDay) {
                     totalOrdersByDay += orders;
                     totalTonsByDay += orders * capacity;
                     totalPriceByDay += replyPrice
 
                 }
-                // إجمالي الشهر
                 totalOrdersMonth += orders;
                 totalTonsMonth += orders * capacity;
             });
 
-            totalPriceMonth += report.totalPrice || 0;
+            totalPriceMonth += report.monthlyPrice || 0;
         });
 
         return {
@@ -95,8 +82,8 @@ function ReportsTable() {
             totalTonsByDay,
             totalOrdersMonth,
             totalTonsMonth,
-            totalPriceByDay,
-            totalPriceMonth,
+            totalPriceByDay: totalPriceByDay.toFixed(2),
+            totalPriceMonth: totalPriceMonth.toFixed(2),
             revenueAmount,
             commission
         };
@@ -137,7 +124,7 @@ function ReportsTable() {
             <PrintPortal>
                 <div className="border rounded-lg on-print m-2">
                     <h1 className="text-center my-5">
-                        {reportType.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
+                        {reportType?.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
                     </h1>
 
                     <Table className="table-auto">
