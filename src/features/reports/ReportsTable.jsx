@@ -31,7 +31,7 @@ function ReportsTable() {
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
 
     const filteredReports = useMemo(() => {
-        const key = cons ? "operator" : "transporter";
+        const key = cons ? "operator" : isTransporter ? "transporter" : "school";
 
         return (
             reports.reports?.filter((r) =>
