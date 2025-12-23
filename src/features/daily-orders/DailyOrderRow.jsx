@@ -26,7 +26,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{formatDateWithTime(executionTime) || "-"}</TableCell>
             <TableCell>{well?.name}</TableCell>
             <TableCell>{RequiredCapacity || "-"}</TableCell>
-            <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice.toFixed(2)}</TableCell>
+            <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || 0}</TableCell>
             {/* <TableCell>{amount}</TableCell> */}
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
