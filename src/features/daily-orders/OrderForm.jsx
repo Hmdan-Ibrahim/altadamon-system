@@ -56,6 +56,7 @@ function OrderForm({
                 transporter: orderToEdit?.transporter?._id || undefined,
                 RequiredCapacity: orderToEdit?.RequiredCapacity || undefined,
                 replyPrice: orderToEdit?.replyPrice || undefined,
+                driverTrip: orderToEdit?.driverTrip || undefined,
                 well: orderToEdit?.well?._id || undefined,
                 status: orderToEdit?.status || undefined,
                 notes: orderToEdit?.notes || undefined,
@@ -180,6 +181,18 @@ function OrderForm({
                                 )}
                             />
                             {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle.message}</p>}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="RequiredCapacity">ترب السائق</Label>
+                            <Controller
+                                control={control}
+                                name="driverTrip"
+                                disabled={isWorking}
+                                render={({ field }) => (
+                                    <Input value={field.value} {...field} type="number" placeholder="الترب" className={`${errors.driverTrip && "border-red-500"}`} />
+                                )}
+                            />
+                            {errors.driverTrip && <p className="text-red-500 text-sm">{errors.driverTrip.message}</p>}
                         </div>
                     }
                     {watch("operator") !== "التضامن" &&
