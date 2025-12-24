@@ -163,6 +163,7 @@ function OrderForm({
                         {errors.transporter && <p className="text-red-500 text-sm">{errors.transporter.message}</p>}
                     </div>}
                     {watch("operator") === "التضامن" &&
+                    <>
                         <div className="space-y-2">
                             <Controller
                                 control={control}
@@ -194,6 +195,7 @@ function OrderForm({
                             />
                             {errors.driverTrip && <p className="text-red-500 text-sm">{errors.driverTrip.message}</p>}
                         </div>
+                    </>
                     }
                     {watch("operator") !== "التضامن" &&
                         <div className="space-y-2">
