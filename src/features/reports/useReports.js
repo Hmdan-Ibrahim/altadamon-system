@@ -18,6 +18,7 @@ export const useReports = () => {
     let region = searchParams.get("region")
     let date = searchParams.get("date")
     let groupBy = searchParams.get("groupBy")
+    let ordersType = searchParams.get("orders-type")
 
     const changedRegion = regionState === !region
 
@@ -29,13 +30,13 @@ export const useReports = () => {
             setSearchParams(newParams);
             setRegoin(region)
         }
-    }, [projects, groupBy, project, setSearchParams]);
+    }, [projects, project, setSearchParams]);
 
     project = searchParams.get("project")
 
     groupBy = groupByItems.find(g => g.label === groupBy)?.key || "transporter"
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
-    const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy };
+    const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, groupBy, ordersType };
 
     const { isLoading, data: reports = [], error } = useQuery({
         queryKey: ["reports", { ...filter, sendingDate: '', date: format(date, "MM yyyy") }],
@@ -43,7 +44,7 @@ export const useReports = () => {
             const { data } = await getReports(filter)
             return data || []
         },
-        enabled: !loadingProjects && (!!matchedProject), // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && (!!matchedProject),
     })
 
     return { isLoading, reports, projectName: project, date, error }
