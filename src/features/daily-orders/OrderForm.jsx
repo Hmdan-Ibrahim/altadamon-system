@@ -253,7 +253,7 @@ function OrderForm({
                         />
                         {errors.orderType && <p className="text-red-500 text-sm">{errors.orderType.message}</p>}
                     </div>
-                    {(watch("operator") === "التضامن" && watch("orderType") !== "توريد") &&
+                    {(watch("operator") === "التضامن" && watch("orderType") !== "نزح") &&
                         <div className="space-y-2">
                             <Controller
                                 control={control}
