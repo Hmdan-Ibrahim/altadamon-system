@@ -4,6 +4,7 @@ import SelectDate from "@/src/components/SelectDate";
 import ForRoles from "@/src/components/gards/AuthFeature";
 import { Roles } from "@/src/lib/utils/Entities";
 import SelectReportType from "./SelectReportType";
+import SelectReportOrdersType from "./SelectReportOrdersType";
 import SelectGroupBy from "./SelectGroupBy";
 
 function ReportsTableOperations() {
@@ -18,6 +19,7 @@ function ReportsTableOperations() {
             </ForRoles>
             <SelectDate showDay={true} />
             <SelectReportType />
+            <SelectReportOrdersType />
             <SelectGroupBy />
         </div>
     );
