@@ -246,14 +246,14 @@ function OrderForm({
                                     value={field.value}
                                     onValueChange={field.onChange}
                                     disabled={isWorking}
-                                    selectItems={orderTypes.map(orderType => ({ key: orderType._id, label: orderType.name }))}
+                                    selectItems={orderTypes.map(orderType => ({ key: orderType.key, label: orderType.label }))}
                                     className={`${errors.orderType && "border-red-500"}`}
                                 />
                             )}
                         />
                         {errors.orderType && <p className="text-red-500 text-sm">{errors.orderType.message}</p>}
                     </div>
-                    {(watch("operator") === "التضامن" && watch("orderType") === "توريد") &&
+                    {(watch("operator") === "التضامن" && watch("orderType") !== "توريد") &&
                         <div className="space-y-2">
                             <Controller
                                 control={control}
