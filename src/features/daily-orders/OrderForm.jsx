@@ -246,7 +246,7 @@ function OrderForm({
                                     value={field.value}
                                     onValueChange={field.onChange}
                                     disabled={isWorking}
-                                    selectItems={orderTypeس.map(orderType => ({ key: orderType._id, label: orderType.name }))}
+                                    selectItems={orderType.map(orderType => ({ key: orderType._id, label: orderType.name }))}
                                     className={`${errors.orderType && "border-red-500"}`}
                                 />
                             )}
