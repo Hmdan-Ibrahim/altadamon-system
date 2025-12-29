@@ -23,6 +23,10 @@ const operators = [
     { key: "مقاول", label: "مقاول" },
     { key: "ي-كاش", label: "مشتريات" },
 ]
+const orderTypes = [
+    { key: "توريد", label: "توريد" },
+    { key: "نزح", label: "نزح" },
+]
 const status = [
     { key: StatusOrder.IMPLEMENTED, label: StatusOrder.IMPLEMENTED },
     { key: StatusOrder.NOT_IMPLEMENTED, label: StatusOrder.NOT_IMPLEMENTED },
@@ -57,6 +61,7 @@ function OrderForm({
                 RequiredCapacity: orderToEdit?.RequiredCapacity || undefined,
                 replyPrice: orderToEdit?.replyPrice || undefined,
                 driverTrip: orderToEdit?.driverTrip || undefined,
+                orderType: orderToEdit?.orderType || orderTypes[0].label,
                 well: orderToEdit?.well?._id || undefined,
                 status: orderToEdit?.status || undefined,
                 notes: orderToEdit?.notes || undefined,
@@ -230,7 +235,25 @@ function OrderForm({
                             {errors.replyPrice && <p className="text-red-500 text-sm">{errors.replyPrice.message}</p>}
                         </div>
                     }
-                    {watch("operator") === "التضامن" &&
+                    <div className="space-y-2">
+                        <Controller
+                            control={control}
+                            name="orderType"
+                            rules={{ required: "هذا الحقل مطلوب" }}
+                            render={({ field }) => (
+                                <SelectCom
+                                    label={`نوع الطلب`}
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    disabled={isWorking}
+                                    selectItems={orderTypeس.map(orderType => ({ key: orderType._id, label: orderType.name }))}
+                                    className={`${errors.orderType && "border-red-500"}`}
+                                />
+                            )}
+                        />
+                        {errors.orderType && <p className="text-red-500 text-sm">{errors.orderType.message}</p>}
+                    </div>
+                    {(watch("operator") === "التضامن" && watch("orderType") === "توريد") &&
                         <div className="space-y-2">
                             <Controller
                                 control={control}
