@@ -16,7 +16,7 @@ function SelectProject() {
         setSearchParams(searchParams);
     }
 
-    if (isLoading) return <h1>Loading....</h1>
+    if (isLoading) return <h1>جاري التحميل....</h1>
 
     return (
         <SelectCom value={projectName} label={"المشروع"} onValueChange={handleChange} selectItems={items} />

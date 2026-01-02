@@ -14,7 +14,7 @@ function SelectRegion() {
         setSearchParams(searchParams);
     }
 
-    if (isLoading) return <h1>Loading....</h1>
+    if (isLoading) return <h1>جاري التحميل....</h1>
 
     return (
         <SelectCom value={regionName} label={"المنطقة"} onValueChange={handleChange} selectItems={items} />

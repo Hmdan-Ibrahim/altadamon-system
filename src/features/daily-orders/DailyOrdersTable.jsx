@@ -28,8 +28,8 @@ function DailyOrdersTable() {
             }) || []
         );
     }, [dailyOrders, searchTerm]);
-    
-    if (isLoading) return <h1>Loading.....</h1>
+
+    if (isLoading) return <h1 className="text-3xl font-bold mt-2">جاري التحميل.....</h1>
     if (error) return <Error text={handleError(error)} />
     // if (!searchParams.has("project")) return <h1 className='text-center p-10'>حدد المشروع</h1>
 
