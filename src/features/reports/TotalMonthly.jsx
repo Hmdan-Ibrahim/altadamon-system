@@ -17,7 +17,7 @@ function CardDetails({ title, total }) {
 function TotalMonthly() {
     const { isLoading, reports: { grandTotalCapacity = 0, grandTotalOrders = 0, grandTotalPrice = 0 }, error } = useReports()
 
-    if (isLoading) return <h1>Loading.....</h1>
+    if (isLoading) return <h1 className="m-auto font-bold text-6xl">جاري التحميل...</h1>
     if (error) return <Error text={handleError(error)} />
     return (
         <Card>
