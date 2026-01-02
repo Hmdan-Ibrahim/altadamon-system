@@ -45,14 +45,14 @@ function ReportsTable() {
     const totals = useMemo(() => {
         const selectedDay = new Date(date).getDate();
 
-        let totalOrdersByDay = 0;       
-        let totalTonsByDay = 0;         
-        let totalOrdersMonth = 0;     
-        let totalTonsMonth = 0;         
-        let totalPriceByDay = 0;        
-        let totalPriceMonth = 0;       
-        let revenueAmount = 0;        
-        let commission = 0;        
+        let totalOrdersByDay = 0;
+        let totalTonsByDay = 0;
+        let totalOrdersMonth = 0;
+        let totalTonsMonth = 0;
+        let totalPriceByDay = 0;
+        let totalPriceMonth = 0;
+        let revenueAmount = 0;
+        let commission = 0;
 
         filteredReports.forEach(report => {
             const capacity = report.RequiredCapacity;
@@ -94,7 +94,7 @@ function ReportsTable() {
         notesRef.current[reportId] = value;
     };
 
-    if (isLoading) return <h1>Loading.....</h1>
+    if (isLoading) return <h1 className="text-3xl font-bold mt-2">جاري التحميل.....</h1>
     if (error) return <Error text={handleError(error)} />
 
 

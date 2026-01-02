@@ -8,7 +8,6 @@ import { useQueries, useQuery } from "@tanstack/react-query"
 import AuthFeature from "../components/gards/AuthFeature"
 import { useAuth } from "../hooks/useAuth"
 
-// Mock data
 const stats = [
   {
     name: "المناطق", key: "regions", veiwFor: [Roles.MANAGER], icon: MapPin, color: "text-blue-600"

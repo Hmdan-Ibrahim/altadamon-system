@@ -4,7 +4,6 @@ import ProtectedRoute from "./components/layout/ProtectedRoute"
 import DashboardLayout from "./components/layout/DashboardLayout"
 import LoginPage from "./pages/LoginPage"
 
-// Lazy load الصفحات الكبيرة
 const Dashboard = lazy(() => import("./pages/Dashboard"))
 const Regions = lazy(() => import("./pages/Regions"))
 const Projects = lazy(() => import("./pages/Projects"))
@@ -18,7 +17,7 @@ const ScheduleTablePage = lazy(() => import("./pages/ScheduleTablePage"))
 
 function App() {
   return (
-    <Suspense fallback={<h1 className="m-auto font-bold text-6xl">Loading...</h1>}>
+    <Suspense fallback={<h1 className="m-auto font-bold text-6xl">جاري التحميل...</h1>}>
 
       <Routes>
         <Route path="/login" element={<LoginPage />} />
@@ -37,7 +36,7 @@ function App() {
             <Route path="reports" element={<ReportsPage />} />
           </Route>
         </Route>
-        <Route path="*" element={<h1>this resourse is not found</h1>} />
+        <Route path="*" element={<h1 className="m-auto font-bold text-6xl">هذا المصدر غير موجود!</h1>} />
       </Routes>
     </Suspense>
   )
