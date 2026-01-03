@@ -23,7 +23,6 @@ export const useProjects = () => {
     const regionParam = searchParams.get("region")
 
     useEffect(() => {
-        // إذا لم يكن هناك region في الرابط، نعيّنه لأول منطقة
         if (!regionParam && regions.length > 0) {
             searchParams.set("region", regions[0]?.name);
             setSearchParams(searchParams);
@@ -42,7 +41,7 @@ export const useProjects = () => {
 
             return data || []
         },
-        enabled: !loadingRegions && (regions.length > 0 || !!user.region), // حتى لا يُستدعى قبل تحميل المناطق
+        enabled: !loadingRegions && (regions.length > 0 || !!user.region),
     })
 
     return { isLoading, projects, error }

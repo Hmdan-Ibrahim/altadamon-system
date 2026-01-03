@@ -4,8 +4,6 @@ import { useProjects } from "./useProjects";
 
 function SelectProject() {
     const { isLoading, projects = [] } = useProjects()
-
-    console.log("SelectProject project", projects);
     const [searchParams, setSearchParams] = useSearchParams();
 
     const items = projects.map(project => ({ key: project._id, label: project.name })) || []
