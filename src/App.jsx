@@ -29,6 +29,7 @@ function App() {
             <Route path="regions" element={<Regions />} />
             <Route path="projects" element={<Projects />} />
             <Route path="schools" element={<Schools />} />
+             <Route path="users" element={<h1>تحت التطوير</h1>} />
             <Route path="vehicles" element={<VehiclesPage />} />
             <Route path="wells" element={<WellsList />} />
             <Route path="daily-orders" element={<DailyOrdersPage />} />
