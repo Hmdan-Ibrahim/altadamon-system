@@ -6,11 +6,12 @@ export default function VehiclesPage() {
 
   return (
     <>
+      <h1>تحت التطوير</h1>
       <Card>
-        <CardContent>
+        {/* <CardContent>
           <VehiclesTableOperations />
           <VehiclesTable />
-        </CardContent>
+        </CardContent> */}
       </Card>
     </>
   )
