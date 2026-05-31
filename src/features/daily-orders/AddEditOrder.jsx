@@ -16,12 +16,12 @@ function AddEditOrder({ dailyOrder }) {
                     </>
                 }
             </Button>
-            <OrderForm open={formOpen}
+            {formOpen && <OrderForm open={formOpen}
                 orderToEdit={dailyOrder}
                 title={dailyOrder ? "تعديل الطلب" : "إضافة طلب"}
                 onOpenChange={setFormOpen}
                 submitText={dailyOrder && "تعديل"}
-            />
+            />}
         </div>
 
     )

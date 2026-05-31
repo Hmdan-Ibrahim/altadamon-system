@@ -10,7 +10,7 @@ function ScheduleTableRow({ schoolId, date, Days, report, index }) {
     const { loading, createNewOrder: createNewOrders } = useCreateOrders()
     const { isCreating, createNewSchool } = useCreateSchool();
 
-    const { school, numOfReplaies } = report
+    const { school, district, neighborhood, ministerialNumber } = report
     let dailyOrders = [];
 
     const DaysCapacity = Days.map(day => {
@@ -28,21 +28,23 @@ function ScheduleTableRow({ schoolId, date, Days, report, index }) {
     }
 
     const handleCreate = () => {
-        createNewSchool({ name: school });
+        createNewSchool({ name: school, district, neighborhood, ministerialNumber });
     }
 
     return (
         <TableRow>
             <TableCell>{index}</TableCell>
             <TableCell className=" text-start min-w-40">{school}</TableCell>
-            <TableCell>{numOfReplaies}</TableCell>
+            <TableCell>{district}</TableCell>
+            <TableCell>{neighborhood}</TableCell>
+            <TableCell>{ministerialNumber}</TableCell>
             {DaysCapacity}
             <TableCell>
                 <Button type="submit" disabled={loading} onClick={handleSave}>حفظ</Button>
             </TableCell>
             {!schoolId &&
                 <TableCell>
-                    <Button type="submit" disabled={loading} onClick={handleCreate}>إضافة مدرسة</Button>
+                    <Button type="submit" disabled={isCreating} onClick={handleCreate}>إضافة مدرسة</Button>
                 </TableCell>
             }
         </TableRow>

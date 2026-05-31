@@ -7,8 +7,9 @@ function HeaderTable({ Days }) {
             <TableRow>
                 <TableHead>م</TableHead>
                 <TableHead>المدرسة</TableHead>
-                <TableHead>عدد الردود</TableHead>
-                {/* <TableHead>السعة</TableHead> */}
+                <TableHead>المنطقة</TableHead>
+                <TableHead>الحي</TableHead>
+                <TableHead>الرقم الوزاري</TableHead>
                 {Days.map(day => (
                     <TableHead
                         key={day}

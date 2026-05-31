@@ -13,7 +13,7 @@ function statusStyele(status, beforeToday) {
 
 function DailyOrderRow({ order, index, beforeToday }) {
 
-    const { _id: dailyOrderId, school, status, sendingDate, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, notes } = order
+    const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, notes, buildingImage, images } = order
     return (
         <TableRow className={`${statusStyele(status, beforeToday)} `}>
             <TableCell>{index}</TableCell>
@@ -22,18 +22,17 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell className='min-w-fit'>{transporter?.name}</TableCell>
             <TableCell>{vehicle.plateNumber || '-'}</TableCell>
             <TableCell>{operator == "ي-كاش" ? "مشتريات" : operator}</TableCell>
-            <TableCell>{formatDayMonthYear(sendingDate, "dd MMMM yyyy")}</TableCell>
-            <TableCell>{formatDateWithTime(executionTime) || "-"}</TableCell>
+            <TableCell>{orderType}</TableCell>
+            <TableCell>{formatDateWithTime(executionTime, "dd MMMM yyyy") || "-"}</TableCell>
             <TableCell>{well?.name}</TableCell>
             <TableCell>{RequiredCapacity || "-"}</TableCell>
             <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || '-'}</TableCell>
-            {/* <TableCell>{amount}</TableCell> */}
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
                 <div className="flex items-center justify-enter gap-2">
                     <AddEditOrder dailyOrder={order} />
                     <AuthFeature roles={[Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
-                        <DeleteOrder dailyOrderName={name} dailyOrderId={dailyOrderId} />
+                        <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
                     </AuthFeature>
                 </div>
             </TableCell>

@@ -1,7 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { MapPin, FolderKanban, School, Truck } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts"
 import { Roles } from "../lib/utils/Entities"
 import { getCountDocs } from "../services/api/api"
 import { useQueries, useQuery } from "@tanstack/react-query"

@@ -1,30 +1,49 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/src/components/ui/table';
-import { useState } from 'react'
+import { Table, TableBody, TableCell, TableRow } from '@/src/components/ui/table';
+import { useMemo, useState } from 'react'
 import { handleError } from '@/src/services/api/api';
 import { useSchools } from './useSchools';
 import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import SchoolRow from './SchoolRow';
 import AddEditSchool from './AddEditSchool';
-import { useSearchParams } from 'react-router-dom';
+import SchoolsTableHeader from './schoolsTableHeader';
+import SelectCom from '@/src/components/SelectCom';
 
+
+const schoolFields = [
+    { key: "name", label: "المدرسة" },
+    { key: "supervisor", label: "المشرف" },
+    { key: "district", label: "المنطقة" },
+    { key: "neighborhood", label: "الحي" },
+    { key: "ministerialNumber", label: "الرقم الوزاري" },
+]
 
 function SchoolsTable() {
+    const [searchBy, setSearchBy] = useState("name");
 
     const { isLoading, schools, error } = useSchools()
     const [searchTerm, setSearchTerm] = useState("")
-    // const newParams = new URLSearchParams(searchParams);
-
-    const [searchParams] = useSearchParams()
-    const filteredSchools = schools.filter((school) => String(school?.name).toLowerCase().includes(searchTerm.toLowerCase()))
-
+    const filteredSchools = useMemo(() => {
+        return (
+            schools?.filter((school) => {
+                return String(school?.[searchBy])
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+            }) || []
+        );
+    }, [schools, searchTerm]);
     if (isLoading) return <h1>جاري التحميل....</h1>
-    if (error) return <Error text={handleError(error)} />
-    // if (!searchParams.has("project")) return <h1 className='text-center p-10'>حدد المشروع</h1>
+    if (error) return <Error text={handleError(error.message)} />
 
     return (
         <>
-            <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4">
+            <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4 items-end">
+                <SelectCom
+                    label={"حقل البحث"}
+                    value={searchBy}
+                    onValueChange={setSearchBy}
+                    selectItems={schoolFields || []}
+                />
                 <div className="relative flex-1">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
@@ -38,14 +57,7 @@ function SchoolsTable() {
             </div>
             <div className="border rounded-lg">
                 <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>م</TableHead>
-                            <TableHead>اسم المدرسة</TableHead>
-                            <TableHead>المشرف</TableHead>
-                            <TableHead>الاجراءات</TableHead>
-                        </TableRow>
-                    </TableHeader>
+                    <SchoolsTableHeader />
                     <TableBody>
                         {filteredSchools.length === 0 ? (
                             <TableRow>

@@ -16,17 +16,10 @@ export const useDailyOrders = () => {
 
     useEffect(() => {
         if (projects.length > 0) {
-            // إذا لم يوجد project بالرابط أو لا ينتمي للمنطقة المحددة
             if (!project || !projects.find(p => p.name === project)) {
                 searchParams.set("project", projects[0].name)
                 setSearchParams(searchParams)
             }
-        } else {
-            // لا توجد مشاريع => نحذف project من الرابط
-            // if (searchParams.has("project")) {
-            //     searchParams.delete("project")
-            //     setSearchParams(searchParams)
-            // }
         }
     }, [projects, region, setSearchParams])
 

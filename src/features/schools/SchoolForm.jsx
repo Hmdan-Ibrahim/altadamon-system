@@ -37,6 +37,9 @@ function SchoolForm({
         defaultValues: isEditSession
             ? {
                 name: schoolToEdit?.name || undefined,
+                district: schoolToEdit?.district || undefined,
+                neighborhood: schoolToEdit?.neighborhood || undefined,
+                ministerialNumber: schoolToEdit?.ministerialNumber || undefined,
                 supervisor: schoolToEdit?.supervisor?._id || undefined
             }
             : {
@@ -87,21 +90,53 @@ function SchoolForm({
 
                             rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
-                                <Input {...field} placeholder="اسم المنطقة" disabled={isWorking} className={`${errors.name && "border-red-500"}`} />
+                                <Input {...field} placeholder="اسم المدرسة" disabled={isWorking} className={`${errors.name && "border-red-500"}`} />
                             )}
                         />
                         {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                     </div>
                     <div className="space-y-2">
+                        <Label htmlFor="district">المنطقة</Label>
+                        <Controller
+                            control={control}
+                            name="district"
+
+                            rules={{ required: "هذا الحقل مطلوب" }}
+                            render={({ field }) => (
+                                <Input {...field} placeholder="المنطقة" disabled={isWorking} className={`${errors.district && "border-red-500"}`} />
+                            )}
+                        />
+                        {errors.district && <p className="text-red-500 text-sm">{errors.district.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="neighborhood">الحي</Label>
+                        <Controller
+                            control={control}
+                            name="neighborhood"
+
+                            rules={{ required: "هذا الحقل مطلوب" }}
+                            render={({ field }) => (
+                                <Input {...field} placeholder="اسم الحي" disabled={isWorking} className={`${errors.neighborhood && "border-red-500"}`} />
+                            )}
+                        />
+                        {errors.neighborhood && <p className="text-red-500 text-sm">{errors.neighborhood.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="ministerialNumber">الرقم الوزاري</Label>
+                        <Controller
+                            control={control}
+                            name="ministerialNumber"
+                            rules={{ required: "هذا الحقل مطلوب" }}
+                            render={({ field }) => (
+                                <Input {...field} placeholder="الرقم الوزاري" disabled={isWorking} className={`${errors.ministerialNumber && "border-red-500"}`} />
+                            )}
+                        />
+                        {errors.ministerialNumber && <p className="text-red-500 text-sm">{errors.ministerialNumber.message}</p>}
+                    </div>
+                    <div className="space-y-2">
                         <Controller
                             control={control}
                             name="supervisor"
-
-                            // rules={{ required: "هذا الحقل مطلوب" }}
-                            //     render={({ field }) => (
-                            //         <Input {...field} placeholder="العنوان" disabled={isWorking} className={`${errors.address && "border-red-500"}`} />
-                            //     )}
-                            // />
                             render={({ field }) => (
                                 <SelectCom label={"المشرف"}
                                     onValueChange={field.onChange}

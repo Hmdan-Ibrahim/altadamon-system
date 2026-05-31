@@ -55,33 +55,51 @@ function OrderForm({
     const { control, handleSubmit, watch, getValues, reset, formState } = useForm({
         defaultValues: isEditSession
             ? {
-                school: orderToEdit?.school._id || undefined,
-                operator: operators.find(op => orderToEdit?.operator == op.key)?.key || undefined,
-                transporter: orderToEdit?.transporter?._id || undefined,
-                RequiredCapacity: orderToEdit?.RequiredCapacity || undefined,
-                replyPrice: orderToEdit?.replyPrice || undefined,
-                driverTrip: orderToEdit?.driverTrip || undefined,
-                orderType: orderToEdit?.orderType || orderTypes[0].label,
-                well: orderToEdit?.well?._id || undefined,
-                status: orderToEdit?.status || undefined,
-                notes: orderToEdit?.notes || undefined,
+                school: orderToEdit?.school._id,
+                operator: operators.find(op => orderToEdit?.operator == op.key)?.key,
+                transporter: orderToEdit?.transporter?._id,
+                RequiredCapacity: orderToEdit?.RequiredCapacity,
+                replyPrice: orderToEdit?.replyPrice,
+                driverTrip: orderToEdit?.driverTrip,
+                orderType: orderToEdit?.orderType,
+                well: orderToEdit?.well?._id,
+                status: orderToEdit?.status,
+                notes: orderToEdit?.notes,
+                buildingImage: orderToEdit?.buildingImage,
+                images: orderToEdit?.images,
             }
             : {
-                project: projectId
+                project: projectId,
+                status: StatusOrder.NOT_IMPLEMENTED
             },
     });
-    const { errors } = formState;
+
+    const { errors, dirtyFields } = formState;
+    const editingFields = Object.keys(dirtyFields);
+    const operator = watch("operator");
+    const buildingImage = watch("buildingImage")
+    const images = watch("images");
+
     const { isLoading: loadVehicles, vehicles } = useVehicles()
-    const transporterRole = watch("operator") === "التضامن" ? "سائق" : "مقاول"
-    const { isLoading, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
+    const transporterRole = operator === "التضامن" ? "سائق" : "مقاول"
+    const { isLoading: loadTransporters, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
     const afterToday = isAfter(startOfDay(date), startOfDay(new Date()))
 
     function onSubmit(data) {
+        if (isEditSession) {
+            const changedData = {};
+            editingFields.forEach((key) => {
+                changedData[key] = data[key];
+            });
 
-
-        if (isEditSession)
             editOrder(
-                { orderID: orderToEdit._id, order: data },
+                {
+                    orderID: orderToEdit._id, order: {
+                        ...changedData,
+                        oldImages: changedData.images && orderToEdit.images,
+                        oldBuildingImage: changedData.buildingImage && orderToEdit.buildingImage,
+                    }
+                },
                 {
                     onSuccess: (data) => {
                         reset();
@@ -89,6 +107,7 @@ function OrderForm({
                     },
                 }
             );
+        }
         else
             createNewOrder(
                 { ...data, sendingDate: date || new Date() },
@@ -122,7 +141,7 @@ function OrderForm({
                                     label={"المدرسة"}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking || isEditSession}
+                                    disabled={isWorking || isEditSession || loadSchools}
                                     selectItems={schools.map(school => ({ key: school._id, label: school.name }))}
                                     className={`${errors.school && "border-red-500"}`}
                                 />
@@ -149,7 +168,7 @@ function OrderForm({
                         />
                         {errors.operator && <p className="text-red-500 text-sm">{errors.operator.message}</p>}
                     </div>
-                    {watch("operator") !== "ي-كاش" && <div className="space-y-2">
+                    {operator !== "ي-كاش" && <div className="space-y-2">
                         <Controller
                             control={control}
                             name="transporter"
@@ -159,7 +178,7 @@ function OrderForm({
                                     label={`ال${transporterRole}`}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking}
+                                    disabled={isWorking || loadTransporters}
                                     selectItems={transporters.map(transporter => ({ key: transporter._id, label: transporter.name }))}
                                     className={`${errors.transporter && "border-red-500"}`}
                                 />
@@ -167,42 +186,42 @@ function OrderForm({
                         />
                         {errors.transporter && <p className="text-red-500 text-sm">{errors.transporter.message}</p>}
                     </div>}
-                    {watch("operator") === "التضامن" &&
-                    <>
-                        <div className="space-y-2">
-                            <Controller
-                                control={control}
-                                name="vehicle"
+                    {operator === "التضامن" &&
+                        <>
+                            <div className="space-y-2">
+                                <Controller
+                                    control={control}
+                                    name="vehicle"
 
-                                rules={{ required: "هذا الحقل مطلوب" }}
-                                render={({ field }) => (
-                                    <SelectCom
-                                        label={"السيارة"}
-                                        value={field.value}
-                                        onValueChange={field.onChange}
-                                        disabled={isWorking}
-                                        selectItems={vehicles.map(vehicle => ({ key: vehicle._id, label: vehicle.plateNumber }))}
-                                        className={`${errors.vehicle && "border-red-500"}`}
-                                    />
-                                )}
-                            />
-                            {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle.message}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="RequiredCapacity">ترب السائق</Label>
-                            <Controller
-                                control={control}
-                                name="driverTrip"
-                                disabled={isWorking}
-                                render={({ field }) => (
-                                    <Input value={field.value} {...field} type="number" placeholder="الترب" className={`${errors.driverTrip && "border-red-500"}`} />
-                                )}
-                            />
-                            {errors.driverTrip && <p className="text-red-500 text-sm">{errors.driverTrip.message}</p>}
-                        </div>
-                    </>
+                                    rules={{ required: "هذا الحقل مطلوب" }}
+                                    render={({ field }) => (
+                                        <SelectCom
+                                            label={"السيارة"}
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                            disabled={isWorking || loadVehicles}
+                                            selectItems={vehicles.map(vehicle => ({ key: vehicle._id, label: vehicle.plateNumber }))}
+                                            className={`${errors.vehicle && "border-red-500"}`}
+                                        />
+                                    )}
+                                />
+                                {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle.message}</p>}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="RequiredCapacity">ترب السائق</Label>
+                                <Controller
+                                    control={control}
+                                    name="driverTrip"
+                                    disabled={isWorking}
+                                    render={({ field }) => (
+                                        <Input {...field} type="number" placeholder="الترب" className={`${errors.driverTrip && "border-red-500"}`} />
+                                    )}
+                                />
+                                {errors.driverTrip && <p className="text-red-500 text-sm">{errors.driverTrip.message}</p>}
+                            </div>
+                        </>
                     }
-                    {watch("operator") !== "التضامن" &&
+                    {operator !== "التضامن" &&
                         <div className="space-y-2">
                             <Label htmlFor="RequiredCapacity">الكمية المطلوبة</Label>
                             <Controller
@@ -212,24 +231,23 @@ function OrderForm({
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
 
-                                    <Input value={field.value} {...field} type="number" placeholder="الكمية المطلوبة" className={`${errors.RequiredCapacity && "border-red-500"}`} />
+                                    <Input  {...field} type="number" placeholder="الكمية المطلوبة" className={`${errors.RequiredCapacity && "border-red-500"}`} />
                                 )}
                             />
                             {errors.RequiredCapacity && <p className="text-red-500 text-sm">{errors.RequiredCapacity.message}</p>}
                         </div>
                     }
-                    {watch("operator") !== "التضامن" &&
+                    {operator !== "التضامن" &&
                         <div className="space-y-2">
                             <Label htmlFor="replyPrice">السعر المحدد</Label>
                             <Controller
                                 control={control}
                                 name="replyPrice"
                                 disabled={isWorking}
-                                // rules={{ required: getValues.operator !== "التضامن" && "هذا الحقل مطلوب" }}
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
 
-                                    <Input value={field.value} {...field} type="number" placeholder="السعر المحدد" className={`${errors.replyPrice && "border-red-500"}`} />
+                                    <Input {...field} type="number" placeholder="السعر المحدد" className={`${errors.replyPrice && "border-red-500"}`} />
                                 )}
                             />
                             {errors.replyPrice && <p className="text-red-500 text-sm">{errors.replyPrice.message}</p>}
@@ -253,19 +271,19 @@ function OrderForm({
                         />
                         {errors.orderType && <p className="text-red-500 text-sm">{errors.orderType.message}</p>}
                     </div>
-                    {(watch("operator") === "التضامن" && watch("orderType") !== "نزح") &&
+                    {(operator === "التضامن" && watch("orderType") !== "نزح") &&
                         <div className="space-y-2">
                             <Controller
                                 control={control}
                                 name="well"
-    
+
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
                                     <SelectCom
                                         label={"البئر"}
                                         value={field.value}
                                         onValueChange={field.onChange}
-                                        disabled={isWorking}
+                                        disabled={isWorking || loadWells}
                                         selectItems={wells.map(well => ({ key: well._id, label: well.name }))}
                                         className={`${errors.well && "border-red-500"}`}
                                     />
@@ -305,11 +323,85 @@ function OrderForm({
                         />
                         {errors.notes && <p className="text-red-500 text-sm">{errors.notes.message}</p>}
                     </div>
+                    {watch("status") == StatusOrder.IMPLEMENTED && <>
+                        <div className="space-y-2">
+                            <Label>صورة المبنى / اللوحة</Label>
+                            <Controller
+                                control={control}
+                                name="buildingImage"
+                                rules={{ required: "هذا الحقل مطلوب في حالة التنفيذ" }}
+                                render={({ field }) => (
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) =>
+                                            field.onChange(e.target.files)
+                                        }
+                                    />
+                                )}
+                            />
+                            {errors.buildingImage && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.buildingImage.message}
+                                </p>
+                            )}
+                            {buildingImage && (
+
+                                <img
+                                    src={typeof buildingImage === "string" ? buildingImage : (URL.createObjectURL(buildingImage[0]))}
+                                    alt="building"
+                                    className="w-full h-52 object-center rounded-lg border"
+                                />
+
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label>الصور</Label>
+                            <Controller
+                                control={control}
+                                name="images"
+                                rules={{ required: "الصور مطلوبة في حالة التنفيذ" }}
+                                render={({ field }) => (
+                                    <Input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={(e) =>
+                                            field.onChange(e.target.files)
+                                        }
+                                    />
+                                )}
+                            />
+                            {errors.images && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.images.message}
+                                </p>
+                            )}
+                            {images?.length > 0 && (
+
+                                <div className="grid grid-cols-2 gap-2">
+
+                                    {Array.from(images).map((file, index) => (
+
+                                        <img
+                                            key={index}
+                                            src={typeof file === "string" ? file : URL.createObjectURL(file)}
+                                            alt="preview"
+                                            className="w-full h-40 object-center rounded-lg border"
+                                        />
+
+                                    ))}
+
+                                </div>
+                            )}
+                        </div>
+                    </>}
+
                     <div className="flex gap-2 justify-end pt-4">
                         <Button type="button" disabled={isWorking} variant="outline" onClick={() => { reset(); onOpenChange(false) }}>
                             إلغاء
                         </Button>
-                        <Button type="submit" disabled={isWorking}>{submitText}</Button>
+                        <Button type="submit" disabled={isWorking || editingFields.length == 0}>{isWorking ? `جار ال${submitText}` : submitText}</Button>
                     </div>
                 </form>
             </DialogContent>

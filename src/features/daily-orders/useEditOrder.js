@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useEditOrder = () => {
     const queryClient = useQueryClient();
 
-    const { isLoading: isEditing, mutate: editOrder } = useMutation({
+    const { isPending: isEditing, mutate: editOrder } = useMutation({
         mutationFn: updateOrder,
         onSuccess: (data) => {
             toast.success(data.message);

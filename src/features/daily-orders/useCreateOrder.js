@@ -7,7 +7,7 @@ export const useCreateOrder = () => {
     const queryClient = useQueryClient();
     // const date = 
 
-    const { isLoading: isEditing, mutate: createNewOrder } = useMutation({
+    const { isPending: isCreating, mutate: createNewOrder } = useMutation({
         mutationFn: createOrder,
         onSuccess: (data) => {
             toast.success(data.message);
@@ -17,5 +17,5 @@ export const useCreateOrder = () => {
         // enabled: false
     })
 
-    return { isEditing, createNewOrder }
+    return { isCreating, createNewOrder }
 }
