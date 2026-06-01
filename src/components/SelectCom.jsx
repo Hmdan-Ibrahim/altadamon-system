@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChevronsDown, ChevronsUpDown } from "lucide-react"
+import { ChevronsDown } from "lucide-react"
 import { Button } from "./ui/button"
 import {
     Command,
@@ -9,12 +9,8 @@ import {
     CommandItem,
     CommandList,
 } from "./ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "./ui/popover"
 import { Label } from "./ui/label"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 
 const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
     const [open, setOpen] = React.useState(false)
@@ -24,10 +20,10 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
 
     return (
         <div className="min-w-45">
-            <Label className="mb-2.5 pr-1.5 text-2xl">{label}</Label>
+            <Dialog open={open} onOpenChange={disabled ? () => { } : setOpen}>
+                <Label className="mb-2.5 pr-1.5 text-2xl">{label}</Label>
 
-            <Popover open={open} onOpenChange={disabled ? () => { } : setOpen}>
-                <PopoverTrigger asChild>
+                <DialogTrigger asChild>
                     <Button
                         variant="outline"
                         disabled={disabled}
@@ -37,10 +33,13 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
                         {selectedLabel || `أختر ${label}`}
                         <ChevronsDown className="ml-2 h-4 w-4 opacity-50" />
                     </Button>
-                </PopoverTrigger>
+                </DialogTrigger >
 
                 {!disabled && (
-                    <PopoverContent className="w-full p-0" onWheel={(e) => e.stopPropagation()}>
+                    <DialogContent className="">
+                        <DialogHeader>
+                            <DialogTitle>{`${label}`}</DialogTitle>
+                        </DialogHeader>
                         <Command>
                             {selectItems?.length > 8 && <CommandInput placeholder={`ابحث عن ${label}...`} />}
 
@@ -62,9 +61,9 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
                                 </CommandGroup>
                             </CommandList>
                         </Command>
-                    </PopoverContent>
+                    </DialogContent >
                 )}
-            </Popover>
+            </Dialog >
         </div>
     )
 }
