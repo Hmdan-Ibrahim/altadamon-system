@@ -5,13 +5,11 @@ import imageCompression from "browser-image-compression";
 
 export async function getOrders(filter) {
     const res = await api.get(`/daily-orders`, { params: filter })
-    console.log("getOrders", res.data);
     return res.data
 }
 
 export async function getDailyOrdersByProject(projectId, filter) {
     const res = await api.get(`/daily-orders/project/${projectId}`, { params: filter })
-    console.log("getDailyOrdersByProject ge", res.data);
     return res.data
 }
 
@@ -63,17 +61,12 @@ export async function deleteImages(images = []) {
         .from("order-images")
         .remove(paths);
 
-    console.log("$#################################");
-
-
     if (error) throw "error";
 }
 
 
 export async function createOrder(order) {
-    console.log(order);
-
-    let buildingImage = null;
+    let buildingImage;
     let images = [];
 
     if (order.buildingImage instanceof FileList) {
@@ -85,7 +78,6 @@ export async function createOrder(order) {
     }
 
     const res = await api.post(`/daily-orders`, { ...order, buildingImage, images })
-    console.log("createOrder createOrder createOrder createOrder", res.data);
     return res.data
 }
 
@@ -112,8 +104,14 @@ export async function updateOrder({ orderID, order }) {
 }
 
 export async function deleteOrder(order) {
-    const { id: orderID, buildingImage, images } = order
-    await deleteImages([buildingImage, ...images]);
+    const { id: orderID, buildingImage, images = [] } = order
+
+    if (buildingImage) {
+        await deleteImages([buildingImage]);
+    }
+    if (images) {
+        await deleteImages(images);
+    }
 
     const res = await api.delete(`/daily-orders/${orderID}`)
     return res
@@ -131,40 +129,3 @@ export async function downloadOrdersPptx(filter) {
 
     return res.data;
 }
-
-
-// async function uploadImages(files = []) {
-//     const uploadedImages = [];
-
-//     for (const file of files) {
-//         const compressed =
-//             await imageCompression(file, {
-//                 maxSizeMB: 0.8,
-//                 maxWidthOrHeight: 1400,
-//                 initialQuality: 0.8,
-//                 useWebWorker: true,
-//             });
-
-//         const fileName =
-//             `${Date.now()}-${"file"}`;
-
-//         const { error } =
-//             await supabase.storage
-//                 .from("order-images")
-//                 .upload(fileName, compressed);
-
-//         if (error) {
-//             console.log(error);
-//             continue;
-//         }
-
-//         const { data } =
-//             supabase.storage
-//                 .from("order-images")
-//                 .getPublicUrl(fileName);
-
-//         uploadedImages.push(data.publicUrl);
-//     }
-
-//     return uploadedImages;
-// }

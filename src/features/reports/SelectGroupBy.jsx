@@ -1,4 +1,4 @@
-import SelectCom from "@/src/components/SelectCom";
+import { FieldSelect } from "@/src/components/FieldSelect";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -26,7 +26,7 @@ function SelectGroupBy() {
     }
 
     return (
-        <SelectCom value={selected} label={"تقرير حسب"} onValueChange={handleChange} selectItems={groupByItems} />
+        <FieldSelect value={selected} label={"تقرير حسب"} onChange={handleChange} fields={groupByItems} />
     );
 }
 

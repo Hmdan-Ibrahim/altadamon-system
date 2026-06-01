@@ -12,7 +12,7 @@ import { useProjects } from '../projects/useProjects'
 import { useSearchParams } from 'react-router-dom'
 import { useUsers } from '@/src/hooks/useUsers'
 import { Roles } from '@/src/lib/utils/Entities'
-import SelectCom from '@/src/components/SelectCom'
+import { FieldSelect } from '@/src/components/FieldSelect'
 
 function SchoolForm({
     open,
@@ -138,10 +138,10 @@ function SchoolForm({
                             control={control}
                             name="supervisor"
                             render={({ field }) => (
-                                <SelectCom label={"المشرف"}
+                                <FieldSelect label={"المشرف"}
                                     onValueChange={field.onChange}
                                     value={field.value}
-                                    selectItems={supervisors.map(supervisor => ({ key: supervisor._id, label: supervisor.name }))} />
+                                    fields={supervisors.map(supervisor => ({ key: supervisor._id, label: supervisor.name }))} />
                             )}
                         />
                         {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}

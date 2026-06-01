@@ -12,7 +12,7 @@ import {
 import { Label } from "./ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 
-const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
+const SelectBySearch = ({ label, value, onValueChange, selectItems, disabled }) => {
     const [open, setOpen] = React.useState(false)
 
     const selectedLabel =
@@ -22,7 +22,6 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
         <div className="min-w-45">
             <Dialog open={open} onOpenChange={disabled ? () => { } : setOpen}>
                 <Label className="mb-2.5 pr-1.5 text-2xl">{label}</Label>
-
                 <DialogTrigger asChild>
                     <Button
                         variant="outline"
@@ -36,7 +35,7 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
                 </DialogTrigger >
 
                 {!disabled && (
-                    <DialogContent className="">
+                    <DialogContent>
                         <DialogHeader>
                             <DialogTitle>{`${label}`}</DialogTitle>
                         </DialogHeader>
@@ -68,4 +67,4 @@ const SelectCom = ({ label, value, onValueChange, selectItems, disabled }) => {
     )
 }
 
-export default SelectCom
+export default SelectBySearch

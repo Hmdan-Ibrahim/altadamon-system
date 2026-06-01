@@ -9,8 +9,16 @@ import DailyOrderRow from './DailyOrderRow';
 import { isBefore, startOfDay } from 'date-fns';
 import PrintPortal from '@/src/components/layout/PrintPortal';
 import DailyOrdersTableHeader from './DailyOrdersTableHeader';
-import { SearchBySelect } from './SelectSearchBy';
+import { FieldSelect } from '@/src/components/FieldSelect';
 
+const searchFields = [
+    { key: "school", label: "المدرسة" },
+    { key: "operator", label: "المشغل" },
+    { key: "supervisor", label: "المشرف" },
+    { key: "transporter", label: "الموصل" },
+    { key: "orderType", label: "نوع الطلب" },
+    { key: "status", label: "حالة الطلب" },
+]
 
 function DailyOrdersTable() {
     const [searchBy, setSearchBy] = useState("school");
@@ -34,7 +42,7 @@ function DailyOrdersTable() {
     return (
         <>
             <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4">
-                <SearchBySelect value={searchBy} onChange={setSearchBy} />
+                <FieldSelect value={searchBy} onChange={setSearchBy} fields={searchFields} />
                 <div className="relative flex-1">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input

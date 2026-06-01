@@ -1,7 +1,8 @@
 
 import { useState } from "react"
 import EntitiesPage from "../components/EntitiesPage"
-import SelectCom from "../components/SelectCom"
+import SelectCom from "../components/SelectBySearch"
+import { FieldSelect } from "../components/FieldSelect"
 
 const regions = [
   { key: "nourth", label: "منطقة الشمال" },
@@ -73,16 +74,16 @@ export default function VehiclesPage() {
       columns={columns}
       formFields={formFields}
     >
-      <SelectCom label={"المنطقة"}
+      <FieldSelect label={"المنطقة"}
         value={regionFilter.label}
         onValueChange={setRegionFilter}
-        selectItems={regions}
+        fields={regions}
       />
 
-      <SelectCom label={"المشروع"}
+      <FieldSelect label={"المشروع"}
         value={projectFilter.label}
         onValueChange={setProjectFilter}
-        selectItems={projects}
+        fields={projects}
       />
     </EntitiesPage>
   )

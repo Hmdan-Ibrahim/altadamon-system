@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
-import SelectCom from "@/src/components/SelectCom";
 import { useProjects } from "./useProjects";
+import { FieldSelect } from "@/src/components/FieldSelect";
 
 function SelectProject() {
     const { isLoading, projects = [] } = useProjects()
@@ -12,12 +12,13 @@ function SelectProject() {
     function handleChange(value) {
         searchParams.set("project", items.find(item => item.key === value).label);
         setSearchParams(searchParams);
+
     }
 
     if (isLoading) return <h1>جاري التحميل....</h1>
 
     return (
-        <SelectCom value={projectName} label={"المشروع"} onValueChange={handleChange} selectItems={items} />
+        <FieldSelect value={projectName} label={"المشروع"} onChange={handleChange} fields={items} />
     );
 }
 

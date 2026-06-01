@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 
 import { Controller, useForm } from "react-hook-form";
 
-import SelectCom from '@/src/components/SelectCom'
+import SelectCom from '@/src/components/SelectBySearch'
 import { useSchools } from '../schools/useSchools'
 import { useSearchParams } from 'react-router-dom'
 import { useProjects } from '../projects/useProjects'

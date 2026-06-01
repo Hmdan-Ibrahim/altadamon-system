@@ -1,4 +1,5 @@
-import SelectCom from "@/src/components/SelectCom";
+import { FieldSelect } from "@/src/components/FieldSelect";
+import SelectCom from "@/src/components/SelectBySearch";
 import { useSearchParams } from "react-router-dom";
 
 const ordersTypes = [
@@ -23,7 +24,7 @@ function SelectReportOrdersType() {
     }
 
     return (
-        <SelectCom value={selected} label={"نوع طلبات التقرير"} onValueChange={handleChange} selectItems={ordersTypes} />
+        <FieldSelect value={selected} label={"نوع طلبات التقرير"} onChange={handleChange} fields={ordersTypes} />
     );
 }
 

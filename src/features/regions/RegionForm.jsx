@@ -6,7 +6,7 @@ import React from 'react'
 
 import { Controller, useForm } from "react-hook-form";
 
-import SelectCom from '@/src/components/SelectCom'
+import SelectCom from '@/src/components/SelectBySearch'
 import { useUsers } from '@/src/hooks/useUsers'
 import { useCreateRegion } from './useCreateRegion'
 import { useEditRegion } from './useEditRegion'

@@ -1,9 +1,9 @@
 import React from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
-import SelectCom from "./SelectCom"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
+import { FieldSelect } from "./FieldSelect"
 
 
 export function FormDialog({
@@ -38,11 +38,11 @@ export function FormDialog({
                 {field.required && <span className="text-destructive mr-1">*</span>}
               </Label>
               {field.type === "select" ? (
-                <SelectCom
+                <FieldSelect
                   label={field.label}
                   value={formData[field.name] || ""}
                   onValueChange={(value) => setFormData({ ...formData, [field.name]: value })}
-                  selectItems={field.options || []}
+                  fields={field.options || []}
                 />
 
               ) : field.type === "textarea" ? (

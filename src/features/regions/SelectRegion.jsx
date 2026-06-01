@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useRegions } from "./useRegions";
-import SelectCom from "@/src/components/SelectCom";
+import SelectBySearch from "@/src/components/SelectBySearch";
+import { FieldSelect } from "@/src/components/FieldSelect";
 
 function SelectRegion() {
     const { isLoading, regions = [] } = useRegions()
@@ -17,7 +18,7 @@ function SelectRegion() {
     if (isLoading) return <h1>جاري التحميل....</h1>
 
     return (
-        <SelectCom value={regionName} label={"المنطقة"} onValueChange={handleChange} selectItems={items} />
+        <FieldSelect value={regionName} label={"المنطقة"} onChange={handleChange} fields={items} />
     );
 }
 

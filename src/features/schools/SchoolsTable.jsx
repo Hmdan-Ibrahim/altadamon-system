@@ -7,8 +7,7 @@ import { Input } from '@/src/components/ui/input';
 import SchoolRow from './SchoolRow';
 import AddEditSchool from './AddEditSchool';
 import SchoolsTableHeader from './SchoolsTableHeader';
-import SelectCom from '@/src/components/SelectCom';
-
+import { FieldSelect } from '@/src/components/FieldSelect';
 
 const schoolFields = [
     { key: "name", label: "المدرسة" },
@@ -38,11 +37,11 @@ function SchoolsTable() {
     return (
         <>
             <div className="flex flex-col flex-wrap gap-3.5 md:flex-row my-4 items-end">
-                <SelectCom
+                <FieldSelect
                     label={"حقل البحث"}
                     value={searchBy}
                     onValueChange={setSearchBy}
-                    selectItems={schoolFields || []}
+                    fields={schoolFields || []}
                 />
                 <div className="relative flex-1">
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

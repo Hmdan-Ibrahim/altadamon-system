@@ -2,11 +2,11 @@ import { useState } from "react"
 import { Search, Plus } from "lucide-react"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
-import SelectCom from "./SelectCom"
 import { useUsers } from "../hooks/useUsers"
 import { Card, CardContent } from "./ui/card"
 import { DataTable } from "./data-table"
 import { FormDialog } from "./form-dialog"
+import { FieldSelect } from "./FieldSelect"
 
 export default function EntitiesPage(props) {
   const { entityName, mockEntity, columns, formFields, children } = props
@@ -66,10 +66,10 @@ export default function EntitiesPage(props) {
       <CardContent className="p-6 space-y-4">
         <div className={`flex items-end gap-4`}>
           {children}
-          {!isRegion && <SelectCom label={"حقل البحث"}
+          {!isRegion && <FieldSelect label={"حقل البحث"}
             value={fieldFilter.label}
             onValueChange={setFieldFilter}
-            selectItems={columns}
+            fields={columns}
           />}
         </div>
         <div className={`flex items-end justify-end gap-4`}>

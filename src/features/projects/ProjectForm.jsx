@@ -6,13 +6,13 @@ import React from 'react'
 
 import { Controller, useForm } from "react-hook-form";
 
-import SelectCom from '@/src/components/SelectCom'
 import { useUsers } from '@/src/hooks/useUsers'
 import { useCreateProject } from './useCreateProject'
 import { useEditProject } from './useEditProject'
 import { useRegions } from '../regions/useRegions'
 import { Roles } from '@/src/lib/utils/Entities'
 import { useSearchParams } from 'react-router-dom'
+import { FieldSelect } from '@/src/components/FieldSelect'
 
 function ProjectForm({
     open,
@@ -97,11 +97,11 @@ function ProjectForm({
                         control={control}
                         name="manager"
                         render={({ field }) => (
-                            <SelectCom label={"المدير"}
-                                onValueChange={field.onChange}
+                            <FieldSelect label={"المدير"}
+                                onChange={field.onChange}
                                 disabled={isWorking}
                                 value={field.value}
-                                selectItems={users.map(user => ({ key: user._id, label: user.name }))} />
+                                fields={users.map(user => ({ key: user._id, label: user.name }))} />
                         )}
                     />
 

@@ -9,7 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useUsers } from '@/src/hooks/useUsers'
 import { useCreateOrder } from './useCreateOrder'
 import { useEditOrder } from './useEditOrder'
-import SelectCom from '@/src/components/SelectCom'
+import SelectBySearch from '@/src/components/SelectBySearch'
 import { useSchools } from '../schools/useSchools'
 import { useSearchParams } from 'react-router-dom'
 import { useProjects } from '../projects/useProjects'
@@ -137,7 +137,7 @@ function OrderForm({
 
                             rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
-                                <SelectCom
+                                <SelectBySearch
                                     label={"المدرسة"}
                                     value={field.value}
                                     onValueChange={field.onChange}
@@ -156,7 +156,7 @@ function OrderForm({
                             rules={{ required: "هذا الحقل مطلوب" }}
 
                             render={({ field }) => (
-                                <SelectCom
+                                <SelectBySearch
                                     label={"المشغل"}
                                     value={field.value}
                                     onValueChange={field.onChange}
@@ -174,7 +174,7 @@ function OrderForm({
                             name="transporter"
                             rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
-                                <SelectCom
+                                <SelectBySearch
                                     label={`ال${transporterRole}`}
                                     value={field.value}
                                     onValueChange={field.onChange}
@@ -195,7 +195,7 @@ function OrderForm({
 
                                     rules={{ required: "هذا الحقل مطلوب" }}
                                     render={({ field }) => (
-                                        <SelectCom
+                                        <SelectBySearch
                                             label={"السيارة"}
                                             value={field.value}
                                             onValueChange={field.onChange}
@@ -259,7 +259,7 @@ function OrderForm({
                             name="orderType"
                             rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
-                                <SelectCom
+                                <SelectBySearch
                                     label={`نوع الطلب`}
                                     value={field.value}
                                     onValueChange={field.onChange}
@@ -279,12 +279,12 @@ function OrderForm({
 
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
-                                    <SelectCom
+                                    <SelectBySearch
                                         label={"البئر"}
                                         value={field.value}
                                         onValueChange={field.onChange}
                                         disabled={isWorking || loadWells}
-                                        selectItems={wells.map(well => ({ key: well._id, label: well.name }))}
+                                        selectItems={wells?.map(well => ({ key: well._id, label: well.name })) || []}
                                         className={`${errors.well && "border-red-500"}`}
                                     />
                                 )}
@@ -299,7 +299,7 @@ function OrderForm({
                             rules={{ required: "هذا الحقل مطلوب" }}
 
                             render={({ field }) => (
-                                <SelectCom
+                                <SelectBySearch
                                     label={"الحالة"}
                                     value={field.value}
                                     onValueChange={field.onChange}
