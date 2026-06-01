@@ -6,7 +6,7 @@ import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import SchoolRow from './SchoolRow';
 import AddEditSchool from './AddEditSchool';
-import SchoolsTableHeader from './schoolsTableHeader';
+import SchoolsTableHeader from './SchoolsTableHeader';
 import SelectCom from '@/src/components/SelectCom';
 
 
