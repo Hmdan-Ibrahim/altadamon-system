@@ -19,13 +19,12 @@ const schoolFields = [
 
 function SchoolsTable() {
     const [searchBy, setSearchBy] = useState("name");
-
     const { isLoading, schools, error } = useSchools()
     const [searchTerm, setSearchTerm] = useState("")
     const filteredSchools = useMemo(() => {
         return (
             schools?.filter((school) => {
-                return String(school?.[searchBy])
+                return String(school?.[searchBy]?.name || school?.[searchBy])
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
             }) || []
@@ -40,7 +39,7 @@ function SchoolsTable() {
                 <FieldSelect
                     label={"حقل البحث"}
                     value={searchBy}
-                    onValueChange={setSearchBy}
+                    onChange={setSearchBy}
                     fields={schoolFields || []}
                 />
                 <div className="relative flex-1">
