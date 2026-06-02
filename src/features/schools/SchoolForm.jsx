@@ -43,16 +43,21 @@ function SchoolForm({
                 supervisor: schoolToEdit?.supervisor?._id || undefined
             }
             : {
-                // project: projectId
+                project: projectId
             },
     });
-    const { errors, isSubmitting } = formState;
+    const { errors, isSubmitting, dirtyFields } = formState;
+    const editingFields = Object.keys(dirtyFields);
     const isWorking = isCreating || isEditing || isSubmitting;
 
     function onSubmit(data) {
-        if (isEditSession)
+        if (isEditSession) {
+            const changedData = {};
+            editingFields.forEach((key) => {
+                changedData[key] = data[key];
+            });
             editSchool(
-                { schoolID: schoolToEdit._id, school: data },
+                { schoolID: schoolToEdit._id, school: changedData },
                 {
                     onSuccess: (data) => {
                         reset();
@@ -60,6 +65,7 @@ function SchoolForm({
                     },
                 }
             );
+        }
         else
             createNewSchool(
                 { ...data },
@@ -139,7 +145,7 @@ function SchoolForm({
                             name="supervisor"
                             render={({ field }) => (
                                 <FieldSelect label={"المشرف"}
-                                    onValueChange={field.onChange}
+                                    onChange={field.onChange}
                                     value={field.value}
                                     fields={supervisors.map(supervisor => ({ key: supervisor._id, label: supervisor.name }))} />
                             )}
@@ -150,7 +156,7 @@ function SchoolForm({
                         <Button type="button" variant="outline" onClick={() => { reset(); onOpenChange(false) }}>
                             إلغاء
                         </Button>
-                        <Button type="submit" disabled={isWorking}>{isWorking
+                        <Button type="submit" disabled={isWorking || editingFields.length == 0}>{isWorking
                             ? isEditSession
                                 ? "جارٍ حفظ التعديلات..."
                                 : "جارٍ إنشاء المدرسة..."
