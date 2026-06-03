@@ -10,14 +10,17 @@ function AddEditOrder({ dailyOrder }) {
 
     return (
         <div className="flex">
-            <Button {...dailyOrder && { variant: "ghost", size: "icon" }} onClick={() => setFormOpen(true)}>
-                {dailyOrder ? <Edit className="w-4 h-4" /> :
-                    <AuthFeature withoutRoles={[Roles.DRIVER]}>
+            {dailyOrder ?
+                <Button variant="ghost" size="icon" onClick={() => setFormOpen(true)}>
+                    <Edit className="w-4 h-4" />
+                </Button> :
+                <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                    <Button onClick={() => setFormOpen(true)}>
                         <Plus className="w-4 h-4" />
                         إضافة طلب جديد
-                    </AuthFeature>
-                }
-            </Button>
+                    </Button>
+                </AuthFeature>
+            }
             {formOpen && <OrderForm open={formOpen}
                 orderToEdit={dailyOrder}
                 title={dailyOrder ? "تعديل الطلب" : "إضافة طلب"}
