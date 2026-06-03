@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { MapPin, FolderKanban, School, Truck } from "lucide-react"
 import { Roles } from "../lib/utils/Entities"
 import { getCountDocs } from "../services/api/api"
-import { useQueries, useQuery } from "@tanstack/react-query"
+import { useQueries } from "@tanstack/react-query"
 import AuthFeature from "../components/gards/AuthFeature"
 import { useAuth } from "../hooks/useAuth"
+import React, { useMemo } from "react"
 
 const stats = [
   {
@@ -22,26 +23,6 @@ const stats = [
   },
 ]
 
-const ordersData = [
-  { day: "السبت", orders: 120 },
-  { day: "الأحد", orders: 145 },
-  { day: "الاثنين", orders: 132 },
-  { day: "الثلاثاء", orders: 168 },
-  { day: "الأربعاء", orders: 156 },
-  { day: "الخميس", orders: 142 },
-  { day: "الجمعة", orders: 98 },
-]
-
-const deliveryData = [
-  { month: "يناير", delivered: 3200 },
-  { month: "فبراير", delivered: 3400 },
-  { month: "مارس", delivered: 3100 },
-  { month: "أبريل", delivered: 3600 },
-  { month: "مايو", delivered: 3800 },
-  { month: "يونيو", delivered: 3500 },
-]
-
-import React, { useMemo } from "react"
 
 const StatCard = React.memo(function StatCard({ stat, query }) {
   return (
@@ -85,9 +66,6 @@ function CountDucs() {
       enabled: !!user
     }))
   })
-
-  console.log(queries[0].data);
-
 
   return (
     <>

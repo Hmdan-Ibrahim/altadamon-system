@@ -8,7 +8,8 @@ export const Roles = {
     REGION_MANAGER: "مدير منطقة",
     PROJECT_MANAGER: "مدير مشروع",
     SUPERVISOR: "مشرف",
-    DRIVER: "سائق"
+    DRIVER: "سائق",
+    CONTRACTOR: "مقاول",
 }
 
 export const StatusOrder = {

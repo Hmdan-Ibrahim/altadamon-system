@@ -13,10 +13,11 @@ import SelectBySearch from '@/src/components/SelectBySearch'
 import { useSchools } from '../schools/useSchools'
 import { useSearchParams } from 'react-router-dom'
 import { useProjects } from '../projects/useProjects'
-import { StatusOrder } from '@/src/lib/utils/Entities'
+import { Roles, StatusOrder } from '@/src/lib/utils/Entities'
 import { useVehicles } from '../vehicles/useVehicles'
 import { useWells } from '@/src/hooks/useWells'
 import { isAfter, startOfDay } from 'date-fns'
+import { useAuth } from '@/src/hooks/useAuth'
 
 const operators = [
     { key: "التضامن", label: "التضامن" },
@@ -40,6 +41,7 @@ function OrderForm({
     onSubmit,
     submitText = "حفظ",
 }) {
+    const { user } = useAuth()
     const { projects } = useProjects()
     const { isLoading: loadSchools, schools } = useSchools()
     const { isLoading: loadWells, wells } = useWells()
@@ -52,12 +54,13 @@ function OrderForm({
     const date = searchParams.get("date")
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id
 
-    const { control, handleSubmit, watch, getValues, reset, formState } = useForm({
+    const { control, handleSubmit, watch, reset, formState } = useForm({
         defaultValues: isEditSession
             ? {
                 school: orderToEdit?.school._id,
                 operator: operators.find(op => orderToEdit?.operator == op.key)?.key,
-                transporter: orderToEdit?.transporter?._id,
+                transporter: orderToEdit.transporter._id,
+                vehicle: orderToEdit?.vehicle?._id,
                 RequiredCapacity: orderToEdit?.RequiredCapacity,
                 replyPrice: orderToEdit?.replyPrice,
                 driverTrip: orderToEdit?.driverTrip,
@@ -81,7 +84,7 @@ function OrderForm({
     const images = watch("images");
 
     const { isLoading: loadVehicles, vehicles } = useVehicles()
-    const transporterRole = operator === "التضامن" ? "سائق" : "مقاول"
+    const transporterRole = operator === "التضامن" ? Roles.DRIVER : Roles.CONTRACTOR
     const { isLoading: loadTransporters, users: transporters, error } = useUsers({ project: projectId, role: transporterRole })
     const afterToday = isAfter(startOfDay(date), startOfDay(new Date()))
 
@@ -160,7 +163,7 @@ function OrderForm({
                                     label={"المشغل"}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking}
+                                    disabled={isWorking || user.role === transporterRole}
                                     selectItems={operators}
                                     className={`${errors.operator && "border-red-500"}`}
                                 />
@@ -178,7 +181,7 @@ function OrderForm({
                                     label={`ال${transporterRole}`}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking || loadTransporters}
+                                    disabled={isWorking || loadTransporters || user.role === transporterRole}
                                     selectItems={transporters.map(transporter => ({ key: transporter._id, label: transporter.name }))}
                                     className={`${errors.transporter && "border-red-500"}`}
                                 />
@@ -199,7 +202,7 @@ function OrderForm({
                                             label={"السيارة"}
                                             value={field.value}
                                             onValueChange={field.onChange}
-                                            disabled={isWorking || loadVehicles}
+                                            disabled={isWorking || loadVehicles || user.role === transporterRole}
                                             selectItems={vehicles.map(vehicle => ({ key: vehicle._id, label: vehicle.plateNumber }))}
                                             className={`${errors.vehicle && "border-red-500"}`}
                                         />
@@ -212,7 +215,7 @@ function OrderForm({
                                 <Controller
                                     control={control}
                                     name="driverTrip"
-                                    disabled={isWorking}
+                                    disabled={isWorking || user.role === transporterRole}
                                     render={({ field }) => (
                                         <Input {...field} type="number" placeholder="الترب" className={`${errors.driverTrip && "border-red-500"}`} />
                                     )}
@@ -227,7 +230,7 @@ function OrderForm({
                             <Controller
                                 control={control}
                                 name="RequiredCapacity"
-                                disabled={isWorking}
+                                disabled={isWorking || user.role === transporterRole}
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
 
@@ -243,7 +246,7 @@ function OrderForm({
                             <Controller
                                 control={control}
                                 name="replyPrice"
-                                disabled={isWorking}
+                                disabled={isWorking || user.role === transporterRole}
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
 
@@ -263,7 +266,7 @@ function OrderForm({
                                     label={`نوع الطلب`}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking}
+                                    disabled={isWorking || user.role === transporterRole}
                                     selectItems={orderTypes.map(orderType => ({ key: orderType.key, label: orderType.label }))}
                                     className={`${errors.orderType && "border-red-500"}`}
                                 />
@@ -280,10 +283,10 @@ function OrderForm({
                                 rules={{ required: "هذا الحقل مطلوب" }}
                                 render={({ field }) => (
                                     <SelectBySearch
-                                        label={"البئر"}
+                                        label={"التحلية"}
                                         value={field.value}
                                         onValueChange={field.onChange}
-                                        disabled={isWorking || loadWells}
+                                        disabled={isWorking || loadWells || user.role === transporterRole}
                                         selectItems={wells?.map(well => ({ key: well._id, label: well.name })) || []}
                                         className={`${errors.well && "border-red-500"}`}
                                     />

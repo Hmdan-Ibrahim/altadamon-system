@@ -26,12 +26,14 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{formatDateWithTime(executionTime, "dd MMMM yyyy") || "-"}</TableCell>
             <TableCell>{well?.name}</TableCell>
             <TableCell>{RequiredCapacity || "-"}</TableCell>
-            <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || '-'}</TableCell>
+            <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || '-'}</TableCell>
+            </AuthFeature>
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
                 <div className="flex items-center justify-enter gap-2">
                     <AddEditOrder dailyOrder={order} />
-                    <AuthFeature roles={[Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
+                    <AuthFeature withoutRoles={[Roles.DRIVER]}>
                         <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
                     </AuthFeature>
                 </div>
