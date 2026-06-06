@@ -17,7 +17,8 @@ function DailyOrdersTableHeader() {
                 <TableHead>زمن التنفيذ</TableHead>
                 <TableHead>التحلية</TableHead>
                 <TableHead>السعة</TableHead>
-                <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                <TableHead>ترب السائق</TableHead>
+                <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]}>
                     <TableHead>السعر</TableHead>
                 </AuthFeature>
                 <TableHead>ملاحظات</TableHead>

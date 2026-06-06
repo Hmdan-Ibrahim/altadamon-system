@@ -13,7 +13,7 @@ function statusStyele(status, beforeToday) {
 
 function DailyOrderRow({ order, index, beforeToday }) {
 
-    const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, notes, buildingImage, images } = order
+    const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, driverTrip, notes, buildingImage, images } = order
     return (
         <TableRow className={`${statusStyele(status, beforeToday)} `}>
             <TableCell>{index}</TableCell>
@@ -26,6 +26,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{formatDateWithTime(executionTime, "dd MMMM yyyy") || "-"}</TableCell>
             <TableCell>{well?.name}</TableCell>
             <TableCell>{RequiredCapacity || "-"}</TableCell>
+            <TableCell>{driverTrip}</TableCell>
             <AuthFeature withoutRoles={[Roles.DRIVER]}>
                 <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || '-'}</TableCell>
             </AuthFeature>

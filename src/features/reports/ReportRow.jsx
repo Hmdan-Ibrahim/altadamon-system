@@ -3,6 +3,8 @@ import { TableCell, TableRow } from '@/src/components/ui/table'
 import React, { useMemo } from 'react'
 import { getDaysInMonth } from './ReportsTable';
 import { useSearchParams } from 'react-router-dom';
+import { Roles } from '@/src/lib/utils/Entities';
+import AuthFeature from '@/src/components/gards/AuthFeature';
 
 function getStyleWithOperator(operator) {
     if (operator === "مقاول") {
@@ -18,13 +20,13 @@ function ReportRow({ reportType, showDays, report, index }) {
     const groupBy = searchParams.get("groupBy")
     const isTransporter = groupBy == "الموصلين"
 
-    const { transporter, school, operator, vehicle, RequiredCapacity, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, monthlyPrice } = report
+    const { transporter, school, operator, vehicle, RequiredCapacity, well, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, monthlyPrice } = report
     const { name = '-', accountName = '-', accountNumber = '-', trip = '-' } = transporter || {}
 
     const year = new Date(date).getFullYear()
     const month = new Date(date).getMonth() + 1
     const lengthMonth = getDaysInMonth(year, month)
-    const numDays = Array.from({ length: lengthMonth }, (_, i) => i + 1)
+    const numDays = showDays ? Array.from({ length: lengthMonth }, (_, i) => i + 1) : []
 
     const daysMap = useMemo(() => {
         const map = {};
@@ -44,37 +46,38 @@ function ReportRow({ reportType, showDays, report, index }) {
                         <TableCell className=" text-start min-w-4">{operator == "ي-كاش" ? "مشتريات" : name}</TableCell>
                         <TableCell>{operator == "ي-كاش" ? "" : operator}</TableCell>
                         <TableCell>{vehicle || "-"}</TableCell>
+                        <TableCell>{RequiredCapacity}</TableCell>
                     </> :
                     <TableCell className=" text-start min-w-4">{school}</TableCell>
             }
-            <TableCell>{RequiredCapacity}</TableCell>
 
-            {showDays && numDays.map(day =>
+            {numDays.map(day =>
                 <TableCell key={day}>
-                    {daysMap[day]?.totalOrders ?? "-"}
+                    {(daysMap[day]?.totalOrders || daysMap[day]?.totalCapacity) ?? "-"}
                 </TableCell>
             )}
-            {reportType === "تقرير شهري" && <>
+            {(reportType === "تقرير شهري" && isTransporter) && <>
                 <TableCell>
                     {daysMap[new Date(date).getDate()]?.totalOrders ?? "-"}
                 </TableCell>
-
                 <TableCell>
                     {(daysMap[new Date(date).getDate()]?.totalOrders ?? 0) * RequiredCapacity}
                 </TableCell>
             </>}
 
-            <TableCell>{monthlyOrders}</TableCell>
+            {isTransporter && <TableCell>{monthlyOrders}</TableCell>}
             <TableCell>{totalCapacity}</TableCell>
 
-            {
-                (reportType === "تقرير شهري" || reportType === "استحقاق المشروع") && <>
+            {(["تقرير شهري", "استحقاق المشروع"].includes(reportType) && isTransporter) && <>
+                <TableCell>{well}</TableCell>
+                <AuthFeature withoutRoles={[Roles.DRIVER]}>
                     <TableCell>{replyPrice}</TableCell>
                     {reportType === "تقرير شهري" && <>
                         <TableCell>{+(replyPrice * (daysMap[new Date(date).getDate()]?.totalOrders)).toFixed(3) || 0}</TableCell>
                     </>}
                     <TableCell>{monthlyPrice}</TableCell>
-                </>
+                </AuthFeature>
+            </>
             }
             {reportType === "استحقاق المشروع" && <>
                 <TableCell>{accountName}</TableCell>
@@ -82,8 +85,10 @@ function ReportRow({ reportType, showDays, report, index }) {
             </>}
             {
                 (reportType === "ايرادات المشروع") && <>
-                    <TableCell>11</TableCell>
-                    <TableCell>{11 * totalCapacity}</TableCell>
+                    <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                        <TableCell>11.5</TableCell>
+                        <TableCell>{11.5 * totalCapacity}</TableCell>
+                    </AuthFeature>
                     <TableCell>{trip}</TableCell>
                     <TableCell>{(trip * monthlyOrders) || ''}</TableCell>
                 </>

@@ -10,6 +10,15 @@ import PrintPortal from '@/src/components/layout/PrintPortal';
 import { useSearchParams } from 'react-router-dom';
 import ReportsTableHeader from './ReportsTableHeader';
 import { formatDayMonthYear, getDayName } from '@/src/lib/utils';
+import { FieldSelect } from '@/src/components/FieldSelect';
+import AuthFeature from '@/src/components/gards/AuthFeature';
+import { Roles } from '@/src/lib/utils/Entities';
+
+const searchFields = [
+    { key: "transporter", label: "الموصل" },
+    { key: "operator", label: "المشغل" },
+    { key: "well", label: "التحلية" },
+]
 
 export function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
@@ -21,26 +30,24 @@ function ReportsTable() {
     const reportType = searchParams.get("report");
     const isTransporter = searchParams.get("groupBy") == "الموصلين";
 
+    const [searchBy, setSearchBy] = useState("transporter");
     const [searchTerm, setSearchTerm] = useState("")
     const [showDays, setShowDays] = useState(false)
-    const [cons, setCons] = useState(true)
-
     const { isLoading, reports, projectName, date, error } = useReports()
 
     const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
 
     const filteredReports = useMemo(() => {
-        const key = cons ? "operator" : isTransporter ? "transporter" : "school";
-
+        !isTransporter ? setSearchBy("school") : setSearchBy("transporter")
         return (
             reports.reports?.filter((r) =>
-                String(r?.[key]?.name || r?.[key] || "")
+                String(r?.[searchBy]?.name || r?.[searchBy] || "")
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
             ) || []
         );
-    }, [reports.reports, searchTerm, cons]);
+    }, [reports.reports, searchTerm]);
 
     const totals = useMemo(() => {
         const selectedDay = new Date(date).getDate();
@@ -56,7 +63,7 @@ function ReportsTable() {
 
         filteredReports.forEach(report => {
             const capacity = report.RequiredCapacity;
-            revenueAmount += 11 * report.totalCapacity
+            revenueAmount += 11.5 * report.totalCapacity
             commission += report?.transporter?.trip * report.monthlyOrders || 0;
 
             report.detailsOfDays?.forEach(d => {
@@ -67,11 +74,11 @@ function ReportsTable() {
                 if (dayNum === selectedDay) {
                     totalOrdersByDay += orders;
                     totalTonsByDay += orders * capacity;
-                    totalPriceByDay += replyPrice
+                    totalPriceByDay += replyPrice * orders
 
                 }
                 totalOrdersMonth += orders;
-                totalTonsMonth += orders * capacity;
+                totalTonsMonth += orders * capacity || d.totalCapacity;
             });
 
             totalPriceMonth += report.monthlyPrice || 0;
@@ -112,13 +119,9 @@ function ReportsTable() {
                     />
                 </div>
                 {filteredReports?.length !== 0 && <div className="flex gap-3.5">
+                    {isTransporter && <FieldSelect value={searchBy} onChange={setSearchBy} fields={searchFields} />}
                     <Input type="checkbox" className="max-w-6" checked={showDays} onChange={e => setShowDays(!showDays)} />
                     <Label className={"min-w-fit"}>اظهار الايام</Label>
-                    {isTransporter && <>
-                        <Input type="checkbox" className="max-w-6" checked={cons} onChange={e => setCons(!cons)} />
-                        <Label className={"min-w-fit"}>بحث المشغل</Label>
-                    </>
-                    }
                 </div>}
             </div>
             <PrintPortal>
@@ -128,7 +131,7 @@ function ReportsTable() {
                     </h1>
 
                     <Table className="table-auto">
-                        <ReportsTableHeader showDays={showDays} Days={Days} reportType={reportType} />
+                        <ReportsTableHeader Days={Days} reportType={reportType} />
                         <TableBody>
                             {filteredReports?.length === 0 ? (
                                 <TableRow>
@@ -144,34 +147,37 @@ function ReportsTable() {
                         </TableBody>
                         {filteredReports?.length !== 0 && <TableFooter className="bg-gray-400">
                             <TableRow>
-                                <TableCell className="text-start pr-50 text-lg" colSpan={+(isTransporter ? 5 : 3) + Days.length}>الإجمالي</TableCell>
-                                {reportType === "تقرير شهري" && <>
+                                <TableCell className="text-start pr-50 text-lg" colSpan={+(isTransporter ? 5 : 2) + Days.length}>الإجمالي</TableCell>
+                                {(reportType === "تقرير شهري" && isTransporter) && <>
                                     <TableCell >{totals.totalOrdersByDay}</TableCell>
                                     <TableCell >{totals.totalTonsByDay}</TableCell>
                                 </>}
-                                <TableCell >{totals.totalOrdersMonth}</TableCell>
+                                {isTransporter && <TableCell >{totals.totalOrdersMonth}</TableCell>}
                                 <TableCell >{totals.totalTonsMonth}</TableCell>
-                                {
-                                    (reportType === "تقرير شهري" || reportType === "استحقاق المشروع") && <>
-                                        <TableCell ></TableCell>
+                                {(["تقرير شهري", "استحقاق المشروع"].includes(reportType) && isTransporter) && <>
+                                    <TableCell></TableCell>
+                                    <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                                        <TableCell></TableCell>
                                         {reportType === "تقرير شهري" && <>
                                             <TableCell>{totals.totalPriceByDay}</TableCell>
                                         </>}
                                         <TableCell >{totals.totalPriceMonth}</TableCell>
-                                    </>
+                                    </AuthFeature>
+                                </>
                                 }
 
                                 {(reportType === "استحقاق المشروع") && <TableCell colSpan={2}> </TableCell>}
 
                                 {
                                     (reportType === "ايرادات المشروع") && <>
-                                        <TableCell></TableCell>
-                                        <TableCell>{totals.revenueAmount}</TableCell>
+                                        <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                                            <TableCell></TableCell>
+                                            <TableCell>{totals.revenueAmount}</TableCell>
+                                        </AuthFeature>
                                         <TableCell></TableCell>
                                         <TableCell>{totals.commission}</TableCell>
                                     </>
                                 }
-
                                 <TableCell ></TableCell>
                             </TableRow>
                         </TableFooter>}

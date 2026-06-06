@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader } from '@/src/components/ui/card'
 import React from 'react'
 import { useReports } from './useReports'
 import { handleError } from '@/src/services/api/api'
+import AuthFeature from '@/src/components/gards/AuthFeature'
+import { Roles } from '@/src/lib/utils/Entities'
 
 function CardDetails({ title, total }) {
     return (
@@ -24,9 +26,12 @@ function TotalMonthly() {
             <CardHeader className="text-xl font-bold pb-0">الإجمالي الشهري للمشروع</CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <CardDetails title="إجمالي السعة" total={grandTotalCapacity} />
-                    <CardDetails title="إجمالي الأطنان" total={grandTotalOrders} />
-                    <CardDetails title="السعر الإجمالي" total={grandTotalPrice} />
+                    <CardDetails title="إجمالي الاطنان" total={grandTotalCapacity} />
+                    <CardDetails title="إجمالي الردود" total={grandTotalOrders} />
+                    <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]} >
+                        <CardDetails title="إجمالي الاستحقاق" total={grandTotalPrice} />
+                        <CardDetails title="إجمالي الايرادات" total={grandTotalCapacity * 11.5} />
+                    </AuthFeature>
                 </div>
             </CardContent>
         </Card>
