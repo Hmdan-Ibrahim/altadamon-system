@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableRow } from '@/src/components/ui/table';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { handleError } from '@/src/services/api/api';
 import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
@@ -37,9 +37,12 @@ function ReportsTable() {
 
     const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
-
+    
+    useEffect(() => {
+        setSearchBy(isTransporter ? "transporter" : "school");
+    }, [isTransporter]);
+    
     const filteredReports = useMemo(() => {
-        !isTransporter ? setSearchBy("school") : setSearchBy("transporter")
         return (
             reports.reports?.filter((r) =>
                 String(r?.[searchBy]?.name || r?.[searchBy] || "")
