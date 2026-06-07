@@ -1,5 +1,5 @@
 import { FieldSelect } from "@/src/components/FieldSelect";
-import SelectCom from "@/src/components/SelectBySearch";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const reportsTypes = [
@@ -13,10 +13,13 @@ function SelectReportType() {
     const reportType = searchParams.get("report")
     const isNotTransporter = searchParams.get("groupBy") !== "الموصلين"
 
-    if (!reportType || isNotTransporter) {
-        searchParams.set("report", reportsTypes[0].key);
-        setSearchParams(searchParams);
-    }
+     useEffect(() => {
+        if (!reportType) {
+            const params = new URLSearchParams(searchParams);
+            params.set("report", reportsTypes[0].key);
+            setSearchParams(params);
+        }
+    }, [reportType]);
 
     const selected = reportsTypes.find(item => item.label === reportType)?.key || "";
 
