@@ -37,11 +37,11 @@ function ReportsTable() {
 
     const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)
     const Days = showDays ? Array.from({ length: numMonth }, (_, i) => i + 1) : []
-    
+
     useEffect(() => {
         setSearchBy(isTransporter ? "transporter" : "school");
     }, [isTransporter]);
-    
+
     const filteredReports = useMemo(() => {
         return (
             reports.reports?.filter((r) =>
@@ -66,23 +66,22 @@ function ReportsTable() {
 
         filteredReports.forEach(report => {
             const capacity = report.RequiredCapacity;
-            revenueAmount += 11.5 * report.totalCapacity
+            revenueAmount += report.monthlyRevenue
             commission += report?.transporter?.trip * report.monthlyOrders || 0;
 
             report.detailsOfDays?.forEach(d => {
                 const dayNum = new Date(d.day).getDate();
-                const orders = d.totalOrders || 0;
                 const replyPrice = report.replyPrice || 0;
 
                 if (dayNum === selectedDay) {
-                    totalOrdersByDay += orders;
-                    totalTonsByDay += orders * capacity;
-                    totalPriceByDay += replyPrice * orders
+                    totalOrdersByDay += d.totalOrdersDay || 0;
+                    totalTonsByDay += d.totalCapacityDay;
+                    totalPriceByDay += replyPrice * d.totalOrdersDay || 0
 
                 }
-                totalOrdersMonth += orders;
-                totalTonsMonth += orders * capacity || d.totalCapacity;
+                totalTonsMonth += d.totalOrdersDay * capacity || d.totalCapacityDay;
             });
+            totalOrdersMonth += report.monthlyOrders;
 
             totalPriceMonth += report.monthlyPrice || 0;
         });
@@ -143,7 +142,7 @@ function ReportsTable() {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                filteredReports?.map((report, index) => <ReportRow key={report._id} reportType={reportType} showDays={showDays} report={report} index={index + 1} note={notesRef.current[index + 1]}
+                                filteredReports?.map((report, index) => <ReportRow key={JSON.stringify(report._id)} reportType={reportType} showDays={showDays} report={report} index={index + 1} note={notesRef.current[index + 1]}
                                     onNoteChange={handleNoteChange} />)
                             )
                             }

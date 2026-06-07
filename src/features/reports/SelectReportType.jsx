@@ -13,8 +13,8 @@ function SelectReportType() {
     const reportType = searchParams.get("report")
     const isNotTransporter = searchParams.get("groupBy") !== "الموصلين"
 
-     useEffect(() => {
-        if (!reportType) {
+    useEffect(() => {
+        if (!reportType || isNotTransporter) {
             const params = new URLSearchParams(searchParams);
             params.set("report", reportsTypes[0].key);
             setSearchParams(params);

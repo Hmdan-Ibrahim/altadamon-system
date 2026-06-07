@@ -5,7 +5,6 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 function ReportsTableHeader({ Days, reportType }) {
-    console.log("ReportsTableHeader");
     const [searchParams] = useSearchParams()
     const groupBy = searchParams.get("groupBy")
     const isTransporter = groupBy == "الموصلين"

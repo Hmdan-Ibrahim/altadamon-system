@@ -17,7 +17,7 @@ function CardDetails({ title, total }) {
 }
 
 function TotalMonthly() {
-    const { isLoading, reports: { grandTotalCapacity = 0, grandTotalOrders = 0, grandTotalPrice = 0 }, error } = useReports()
+    const { isLoading, reports: { grandTotalCapacity = 0, grandTotalOrders = 0, grandTotalPrice = 0, grandTotalRevenue = 0 }, error } = useReports()
 
     if (isLoading) return <h1 className="m-auto font-bold text-6xl">جاري التحميل...</h1>
     if (error) return <Error text={handleError(error)} />
@@ -30,7 +30,7 @@ function TotalMonthly() {
                     <CardDetails title="إجمالي الردود" total={grandTotalOrders} />
                     <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]} >
                         <CardDetails title="إجمالي الاستحقاق" total={grandTotalPrice} />
-                        <CardDetails title="إجمالي الايرادات" total={grandTotalCapacity * 11.5} />
+                        <CardDetails title="إجمالي الايرادات" total={grandTotalRevenue} />
                     </AuthFeature>
                 </div>
             </CardContent>

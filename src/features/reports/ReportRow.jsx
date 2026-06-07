@@ -20,7 +20,7 @@ function ReportRow({ reportType, showDays, report, index }) {
     const groupBy = searchParams.get("groupBy")
     const isTransporter = groupBy == "الموصلين"
 
-    const { transporter, school, operator, vehicle, RequiredCapacity, well, detailsOfDays, monthlyOrders, totalCapacity, replyPrice, monthlyPrice } = report
+    const { transporter, school, operator, vehicle, RequiredCapacity, well, detailsOfDays, monthlyOrders, monthlyRevenue, totalCapacity, replyPrice, ContractPricePerTon, monthlyPrice } = report
     const { name = '-', accountName = '-', accountNumber = '-', trip = '-' } = transporter || {}
 
     const year = new Date(date).getFullYear()
@@ -53,15 +53,15 @@ function ReportRow({ reportType, showDays, report, index }) {
 
             {numDays.map(day =>
                 <TableCell key={day}>
-                    {(daysMap[day]?.totalOrders || daysMap[day]?.totalCapacity) ?? "-"}
+                    {(daysMap[day]?.totalOrdersDay || daysMap[day]?.totalCapacityDay) ?? "-"}
                 </TableCell>
             )}
             {(reportType === "تقرير شهري" && isTransporter) && <>
                 <TableCell>
-                    {daysMap[new Date(date).getDate()]?.totalOrders ?? "-"}
+                    {daysMap[new Date(date).getDate()]?.totalOrdersDay ?? "-"}
                 </TableCell>
                 <TableCell>
-                    {(daysMap[new Date(date).getDate()]?.totalOrders ?? 0) * RequiredCapacity}
+                    {(daysMap[new Date(date).getDate()]?.totalCapacityDay ?? 0)}
                 </TableCell>
             </>}
 
@@ -73,7 +73,7 @@ function ReportRow({ reportType, showDays, report, index }) {
                 <AuthFeature withoutRoles={[Roles.DRIVER]}>
                     <TableCell>{replyPrice}</TableCell>
                     {reportType === "تقرير شهري" && <>
-                        <TableCell>{+(replyPrice * (daysMap[new Date(date).getDate()]?.totalOrders)).toFixed(3) || 0}</TableCell>
+                        <TableCell>{+(replyPrice * (daysMap[new Date(date).getDate()]?.totalOrdersDay)).toFixed(3) || 0}</TableCell>
                     </>}
                     <TableCell>{monthlyPrice}</TableCell>
                 </AuthFeature>
@@ -86,8 +86,8 @@ function ReportRow({ reportType, showDays, report, index }) {
             {
                 (reportType === "ايرادات المشروع") && <>
                     <AuthFeature withoutRoles={[Roles.DRIVER]}>
-                        <TableCell>11.5</TableCell>
-                        <TableCell>{11.5 * totalCapacity}</TableCell>
+                        <TableCell>{ContractPricePerTon}</TableCell>
+                        <TableCell>{monthlyRevenue}</TableCell>
                     </AuthFeature>
                     <TableCell>{trip}</TableCell>
                     <TableCell>{(trip * monthlyOrders) || ''}</TableCell>
