@@ -19,7 +19,7 @@ function SelectReportType() {
             params.set("report", reportsTypes[0].key);
             setSearchParams(params);
         }
-    }, [reportType]);
+    }, [reportType, isNotTransporter]);
 
     const selected = reportsTypes.find(item => item.label === reportType)?.key || "";
 

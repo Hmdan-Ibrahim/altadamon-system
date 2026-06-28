@@ -117,12 +117,15 @@ export async function deleteOrder(order) {
     return res
 }
 
-export async function downloadOrdersPptx(filter) {
+export async function downloadOrdersPptx(filter, socketId) {
 
     const res = await api.get(
         "/daily-orders/pptx",
         {
-            params: filter,
+            params: {
+                ...filter,
+                socketId
+            },
             responseType: "blob",
         }
     );

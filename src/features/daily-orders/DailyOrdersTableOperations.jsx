@@ -10,6 +10,7 @@ function DailyOrdersTableOperations() {
     const {
         downloadPptx,
         isPending,
+        socketData,
     } = useDownloadOrdersPptx();
 
     return (
@@ -25,10 +26,20 @@ function DailyOrdersTableOperations() {
                 <Button
                     onClick={() => downloadPptx()}
                     disabled={isPending}
+                    className={isPending && "p-6"}
                 >
-                    {isPending
-                        ? "جاري التحميل..."
-                        : "تحميل تقرير اليوم"}
+                    {isPending ? (
+                        <div className="flex flex-col items-center gap-1">
+                            <span>
+                                جاري إنشاء التقرير {socketData?.progress ?? 0}%
+                            </span>
+
+                            <span className="text-xs opacity-70">
+                                {socketData?.eta
+                                    ? `الوقت المتبقي: ${socketData.eta} ثانية`
+                                    : "جاري الحساب..."}
+                            </span>
+                        </div>) : "تحميل تقرير اليوم"}
                 </Button>
             </ForRoles>
         </div>
