@@ -23,7 +23,7 @@ const navigation = [
     { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
     { name: "المناطق", href: "/dashboard/regions", icon: MapPin, viewFor: [Roles.MANAGER] },
     { name: "المشاريع", href: "/dashboard/projects", icon: FolderKanban, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER] },
-    { name: "المدارس", href: "/dashboard/schools", icon: School, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER] },
+    { name: "المدارس", href: "/dashboard/schools", icon: School, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR] },
     // { name: "المستخدمين", href: "/dashboard/users", icon: Users, viewFor: [Roles.MANAGER] },
     // { name: "السيارات", href: "/dashboard/vehicles", icon: Truck, viewFor: [Roles.MANAGER] },
     // { name: "الآبار", href: "/dashboard/wells", icon: Droplet, viewFor: [Roles.MANAGER] },
