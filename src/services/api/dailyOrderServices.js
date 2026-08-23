@@ -84,8 +84,6 @@ export async function deleteSubabaseImages(images = []) {
 export async function createOrder({ projectId, order }) {
     let buildingImage;
     let images = [];
-    console.log(order);
-    return
 
     try {
         if (order.buildingImage instanceof FileList) {
