@@ -60,7 +60,7 @@ function RegionForm({
     }
 
     function onError(errors) {
-        console.log("Form Errors:", errors);
+        console.error("Form Errors:", errors);
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

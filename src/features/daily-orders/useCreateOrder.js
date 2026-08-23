@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 
 export const useCreateOrder = () => {
     const queryClient = useQueryClient();
-    // const date = 
 
     const { isPending: isCreating, mutate: createNewOrder } = useMutation({
         mutationFn: createOrder,

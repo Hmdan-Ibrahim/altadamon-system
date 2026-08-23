@@ -2,8 +2,6 @@ import { TableCell, TableRow } from '@/src/components/ui/table'
 import React from 'react'
 
 function VehicleRow({ vehicle, index }) {
-    console.log("VehicleRow");
-
     const { _id: vehicleID, plateNumber, capacity, driver } = vehicle
 
     return (

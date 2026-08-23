@@ -17,7 +17,7 @@ export function useAuth() {
 
       navigate("/login")
     } catch (error) {
-      console.log("ERRRRRRRRRRRRRRR", error);
+      console.error("ERRRRRRRRRRRRRRR", error);
 
     }
   }

@@ -17,6 +17,7 @@ const searchFields = [
     { key: "supervisor", label: "المشرف" },
     { key: "transporter", label: "الموصل" },
     { key: "orderType", label: "نوع الطلب" },
+    { key: "RequiredCapacity", label: "السعة" },
     { key: "well", label: "التحلية" },
     { key: "status", label: "حالة الطلب" },
 ]

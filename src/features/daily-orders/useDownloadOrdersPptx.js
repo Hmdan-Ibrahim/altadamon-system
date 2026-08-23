@@ -7,12 +7,16 @@ import { socket } from "@/src/services/api/socket";
 
 import { useProjects } from "../projects/useProjects";
 import toast from "react-hot-toast";
+import { formatDayMonthYear } from "@/src/lib/utils";
+import { useSchools } from "../schools/useSchools";
 
-export function useDownloadOrdersPptx() {
+export function useDownloadOrdersPptx(extraFilter = {}) {
     const [socketData, setSocketData] = useState();
+    const [downloadDate, setDownloadDate] = useState();
     const [searchParams] = useSearchParams();
 
     const { projects = [] } = useProjects();
+    const { schools } = useSchools()
 
     const project = searchParams.get("project");
     const date = searchParams.get("date");
@@ -23,6 +27,7 @@ export function useDownloadOrdersPptx() {
     const filter = {
         sendingDate: date,
         projectId: matchedProject,
+        ...extraFilter
     };
 
     useEffect(() => {
@@ -44,6 +49,7 @@ export function useDownloadOrdersPptx() {
         mutationFn: async () => {
             toast.loading("جاري تحميل التقرير ...")
             setSocketData(null);
+            setDownloadDate(formatDayMonthYear(date, extraFilter.school && !extraFilter.orderID ? 'MMMM yyyy' : 'd MMMM yyyy'))
 
             return await downloadOrdersPptx(
                 filter,
@@ -63,7 +69,7 @@ export function useDownloadOrdersPptx() {
 
             a.href = url;
             a.download =
-                `orders-${Date.now()}.pptx`;
+                extraFilter.school ? `التقارير الفنية لتوريد مياه مدرسة ${schools.find((s) => s._id === extraFilter.school)?.name} ${downloadDate}.pptx` : `التقارير الفنية لتوريد مياه مدينة ${project} ${downloadDate}.pptx`;
 
             document.body.appendChild(a);
             a.click();

@@ -58,7 +58,7 @@ function ScheduleForm({
     }
 
     function onError(errors) {
-        console.log("Form Errors:", errors);
+        console.error("Form Errors:", errors);
     }
     return (
         <>

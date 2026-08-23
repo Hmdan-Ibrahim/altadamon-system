@@ -69,7 +69,7 @@ function ProjectForm({
     }
 
     function onError(errors) {
-        console.log("Form Errors:", errors);
+        console.error("Form Errors:", errors);
     }
 
     if (isLoading || regLoading) return <h1>Loading...</h1>

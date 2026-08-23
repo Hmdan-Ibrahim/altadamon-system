@@ -318,34 +318,26 @@ body {
 
 
 @media print {
-  body #root {
-    /* visibility: hidden; */
-    display: none;
-    background-color: green;
+  body.print-report * {
+    visibility: hidden;
   }
 
-  body {
+  body.print-report {
     background-color: #fff;
-    /* display: none; */
-    /* margin: 0; */
   }
 
-  .on-print,
-  .on-print * {
+  body.print-report .print-area,
+  body.print-report .print-area * {
     visibility: visible;
-
   }
 
-  .on-print {
-    margin: auto;
-    display: block;
-    /* position: absolute; */
+  body.print-report .print-area {
+    position: absolute;
+    left: 0;
     top: 0;
-    right: 0;
     width: 100%;
   }
 
-  /* إخفاء رأس الجدول والتذييل في جميع الصفحات ما عدا الأولى */
   thead,
   tfoot {
     display: table-row-group !important;

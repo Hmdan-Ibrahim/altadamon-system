@@ -18,6 +18,7 @@ import { useVehicles } from '../vehicles/useVehicles'
 import { useWells } from '@/src/hooks/useWells'
 import { isAfter, startOfDay } from 'date-fns'
 import { useAuth } from '@/src/hooks/useAuth'
+import { getImageUrl } from '@/src/lib/utils'
 
 const operators = [
     { key: "التضامن", label: "التضامن" },
@@ -59,7 +60,7 @@ function OrderForm({
             ? {
                 school: orderToEdit?.school._id,
                 operator: operators.find(op => orderToEdit?.operator == op.key)?.key,
-                transporter: orderToEdit.transporter._id,
+                transporter: orderToEdit.transporter?._id,
                 vehicle: orderToEdit?.vehicle?._id,
                 RequiredCapacity: orderToEdit?.RequiredCapacity,
                 replyPrice: orderToEdit?.replyPrice,
@@ -97,10 +98,11 @@ function OrderForm({
 
             editOrder(
                 {
-                    orderID: orderToEdit._id, order: {
+                    projectId, orderID: orderToEdit._id, order: {
                         ...changedData,
                         oldImages: changedData.images && orderToEdit.images,
                         oldBuildingImage: changedData.buildingImage && orderToEdit.buildingImage,
+                        sendingDate: orderToEdit.sendingDate
                     }
                 },
                 {
@@ -113,7 +115,7 @@ function OrderForm({
         }
         else
             createNewOrder(
-                { ...data, sendingDate: date || new Date() },
+                { order: { ...data, sendingDate: date || new Date() }, projectId },
                 {
                     onSuccess: (data) => {
                         reset();
@@ -124,7 +126,7 @@ function OrderForm({
     }
 
     function onError(errors) {
-        console.log("Form Errors:", errors);
+        console.error("Form Errors:", errors);
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange} >
@@ -144,7 +146,7 @@ function OrderForm({
                                     label={"المدرسة"}
                                     value={field.value}
                                     onValueChange={field.onChange}
-                                    disabled={isWorking || isEditSession || loadSchools}
+                                    disabled={isWorking || loadSchools}
                                     selectItems={schools.map(school => ({ key: school._id, label: school.name }))}
                                     className={`${errors.school && "border-red-500"}`}
                                 />
@@ -351,7 +353,7 @@ function OrderForm({
                             {buildingImage && (
 
                                 <img
-                                    src={typeof buildingImage === "string" ? buildingImage : (URL.createObjectURL(buildingImage[0]))}
+                                    src={typeof buildingImage === "string" ? getImageUrl(buildingImage) : (URL.createObjectURL(buildingImage[0]))}
                                     alt="building"
                                     className="w-full h-52 object-center rounded-lg border"
                                 />
@@ -385,14 +387,12 @@ function OrderForm({
                                 <div className="grid grid-cols-2 gap-2">
 
                                     {Array.from(images).map((file, index) => (
-
-                                        <img
+                                        file && <img
                                             key={index}
-                                            src={typeof file === "string" ? file : URL.createObjectURL(file)}
+                                            src={typeof file === "string" ? getImageUrl(file) : URL.createObjectURL(file)}
                                             alt="preview"
                                             className="w-full h-40 object-center rounded-lg border"
                                         />
-
                                     ))}
 
                                 </div>

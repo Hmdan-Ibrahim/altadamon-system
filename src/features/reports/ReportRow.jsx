@@ -5,6 +5,7 @@ import { getDaysInMonth } from './ReportsTable';
 import { useSearchParams } from 'react-router-dom';
 import { Roles } from '@/src/lib/utils/Entities';
 import AuthFeature from '@/src/components/gards/AuthFeature';
+import DownloadOrdersPptx from '../daily-orders/DownloadOrdersPptx';
 
 function getStyleWithOperator(operator) {
     if (operator === "مقاول") {
@@ -48,7 +49,7 @@ function ReportRow({ reportType, showDays, report, index }) {
                         <TableCell>{vehicle || "-"}</TableCell>
                         <TableCell>{RequiredCapacity}</TableCell>
                     </> :
-                    <TableCell className=" text-start min-w-4">{school}</TableCell>
+                    <TableCell className=" text-start min-w-4">{school.name}</TableCell>
             }
 
             {numDays.map(day =>
@@ -99,6 +100,7 @@ function ReportRow({ reportType, showDays, report, index }) {
                     value={note}
                     onChange={(e) => onNoteChange(index, e.target.value)}
                 /> */}
+                {/* <DownloadOrdersPptx filter={{ school: school._id }} /> */}
 
             </TableCell>
         </TableRow>

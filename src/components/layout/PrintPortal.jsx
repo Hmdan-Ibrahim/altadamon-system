@@ -7,10 +7,17 @@ import { useSearchParams } from "react-router-dom";
 import api from "@/src/services/api/api";
 import { useQuery } from "@tanstack/react-query";
 
+const preloadImage = (src) =>
+    new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = src;
+    });
+
 function PrintPortal({ children }) {
     const [printMode, setPrintMode] = useState(false);
     const { user: { project } } = useAuth()
-    const elRef = useRef(null);
 
     const [searchParams] = useSearchParams()
     const projectParam = searchParams.get("project")
@@ -18,7 +25,7 @@ function PrintPortal({ children }) {
     const { projects = [] } = useProjects()
     const matchedProject = useMemo(() => project || projects.find(p => p.name === projectParam)?._id, [project, projectParam])
 
-    const { data: signatures } = useQuery({
+    const { data: signatures, isSuccess } = useQuery({
         queryKey: ["project-signatures", matchedProject],
         queryFn: async () => {
             const { data } = await api.get(
@@ -26,65 +33,61 @@ function PrintPortal({ children }) {
             );
             return data;
         },
-        enabled: !!matchedProject,
+
+        enabled: !!matchedProject && printMode,
+        staleTime: Infinity,
     });
 
-    if (!elRef.current) {
-        elRef.current = document.createElement("div");
-    }
-
     useEffect(() => {
-        document.body.appendChild(elRef.current);
-
-        const handleBeforePrint = () => {
-            setPrintMode(true);
-        };
-
         const handleAfterPrint = () => {
             setPrintMode(false);
+            document.body.classList.remove("print-report");
         };
 
-        window.addEventListener("beforeprint", handleBeforePrint);
         window.addEventListener("afterprint", handleAfterPrint);
 
         return () => {
-            window.removeEventListener("beforeprint", handleBeforePrint);
             window.removeEventListener("afterprint", handleAfterPrint);
-            document.body.removeChild(elRef.current);
         };
     }, []);
 
     useEffect(() => {
-        if (printMode) {
+        if (!printMode || !isSuccess) return;
+        requestAnimationFrame(() => {
             window.print();
-        }
-    }, [printMode]);
+        });
+    }, [printMode, isSuccess]);
+
+    function handlePrint() {
+        setPrintMode(true)
+        document.body.classList.add("print-report");
+    }
 
     if (!printMode) return <>
         {children}
         <Button
-            className="mt-4"
-            onClick={() => setPrintMode(true)}
+            className="ml-4"
+            onClick={handlePrint}
         >
             طباعة
         </Button >
-    </>;
+    </>
 
-    return ReactDOM.createPortal(<>
+    return <div className='print-area'>
         {children}
-        <div className="flex h-50 text-center justify-between">
+        {printMode && isSuccess && <div className="flex h-50 text-center justify-between">
             <div className="">
                 <h4>مدير المشروع</h4>
                 <h4>{signatures?.projectManager?.name}</h4>
-                <img src={signatures?.projectManager?.imageSignature} className="h-40 w-30" alt="لايوجد توقيع" />
+                <img src={signatures?.projectManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
             </div>
             <div className="">
                 <h4>مدير المنطقة</h4>
                 <h4>{signatures?.regionManager?.name}</h4>
-                <img src={signatures?.regionManager?.imageSignature} className="w-30 h-40" alt="لايوجد توقيع" />
+                <img src={signatures?.regionManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
             </div>
-        </div>
-    </>, elRef.current);
+        </div>}
+    </div>;
 }
 
 export default PrintPortal;

@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { Button } from './ui/button'
 import { Calendar } from './ui/calendar'
 import { Label } from './ui/label'
@@ -13,24 +13,21 @@ function SelectDate({ showDay }) {
     const [open, setOpen] = useState(false)
     const [searchParams, setSearchParams] = useSearchParams();
     const date = searchParams.get("date")
+    const selectedDate = date ? parseISO(date) : undefined;
 
     useEffect(() => {
         if (!date) {
             searchParams.set("date", format(new Date(), "yyyy-MM-dd"));
             setSearchParams(searchParams);
         }
-        console.log("useEffect", searchParams.get("date"), formatDayMonthYear(new Date()), format(new Date(), "yyyy-MM-dd"));
     }, [searchParams, setSearchParams])
 
-    console.log("select date", date);
 
     function handleChange(value) {
         if (!value) return;
-        const newDate = value.toISOString();
+        const newDate = format(new Date(value), "yyyy-MM-dd");
         searchParams.set("date", newDate);
         setSearchParams(searchParams);
-
-        console.log("handleChange", searchParams.get("date"), newDate, value);
     }
 
     return (
@@ -53,13 +50,14 @@ function SelectDate({ showDay }) {
                 <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                     <Calendar
                         mode="single"
-                        timeZone="UTC"
-                        selected={format(date, "yyyy-MM-dd")}
+                        // timeZone="UTC"
+                        selected={selectedDate}
                         captionLayout="dropdown"
                         onSelect={(date) => {
                             handleChange(date)
                             setOpen(false)
                         }}
+                        className={"w-50"}
                     />
                 </PopoverContent>
             </Popover>

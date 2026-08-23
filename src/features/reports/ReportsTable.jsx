@@ -13,6 +13,7 @@ import { formatDayMonthYear, getDayName } from '@/src/lib/utils';
 import { FieldSelect } from '@/src/components/FieldSelect';
 import AuthFeature from '@/src/components/gards/AuthFeature';
 import { Roles } from '@/src/lib/utils/Entities';
+import { ExportToExcel } from './ExportToExcel ';
 
 const searchFields = [
     { key: "transporter", label: "الموصل" },
@@ -127,12 +128,12 @@ function ReportsTable() {
                 </div>}
             </div>
             <PrintPortal>
-                <div className="border rounded-lg on-print m-2">
+                <div className="border rounded-lg m-2">
                     <h1 className="text-center my-5">
-                        {reportType?.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "ddMMyyyy")}
+                        {reportType?.split(' ')[0]} انتاجية مشروع {projectName} ليوم {getDayName(date)} الموافق {formatDayMonthYear(date, "dd MMMM yyyy")}
                     </h1>
 
-                    <Table className="table-auto">
+                    <Table className="table-auto ">
                         <ReportsTableHeader Days={Days} reportType={reportType} />
                         <TableBody>
                             {filteredReports?.length === 0 ? (
@@ -186,6 +187,7 @@ function ReportsTable() {
                     </Table>
                 </div>
             </PrintPortal>
+            <ExportToExcel data={filteredReports} date={date} projectName={projectName} />
         </>
     )
 }

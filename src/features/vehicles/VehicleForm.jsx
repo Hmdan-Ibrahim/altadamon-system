@@ -23,9 +23,7 @@ function VehicleForm({
     const { isEditing, editVehicle } = useEditVehicle();
     const isWorking = isCreating || isEditing;
 
-    // const { _id: editId, ...editValues } = vehicleToEdit;
     const isEditSession = !!vehicleToEdit;
-    console.log("isEditSession", vehicleToEdit);
 
 
     const { control, handleSubmit, reset, getValues, formState } = useForm({
@@ -37,11 +35,9 @@ function VehicleForm({
             }
             : {},
     });
-    console.log("getValues", getValues());
     const { errors } = formState;
 
     function onSubmit(data) {
-        console.log("onSubmit", data);
 
         if (isEditSession)
             editVehicle(
@@ -66,7 +62,7 @@ function VehicleForm({
     }
 
     function onError(errors) {
-        console.log("Form Errors:", errors);
+        console.error("Form Errors:", errors);
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

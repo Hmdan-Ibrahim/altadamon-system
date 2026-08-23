@@ -12,9 +12,9 @@ export const formatMonthYear = (date) => {
   return format(new Date(date), 'MMMM yyyy', { locale: ar })
 }
 
-export const formatDayMonthYear = (date) => {
+export const formatDayMonthYear = (date, formate) => {
   if (!date) return ''
-  return format(date, 'dd MMMM yyyy', { locale: ar })
+  return format(date, formate || 'dd MMMM yyyy', { locale: ar })
 }
 
 export const formatDateWithTime = (date) => {
@@ -29,4 +29,16 @@ export function getDaysInMonth(year, month) {
 export function getDayName(date) {
   const DaysNames = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
   return DaysNames[new Date(date).getDay()];
+}
+
+export function getImageUrl(path) {
+
+  if (!path)
+    return "";
+
+  if (path.startsWith("http"))
+    return path;
+
+  return `${import.meta.env.VITE_R2_PUBLIC_URL}/${path}`;
+
 }

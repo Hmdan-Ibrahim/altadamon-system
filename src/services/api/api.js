@@ -26,7 +26,6 @@ api.interceptors.request.use(
 // Response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
-    console.log("resssssssssssssssss", response);
     return response;
   },
   (error) => {
@@ -35,14 +34,12 @@ api.interceptors.response.use(
       localStorage.removeItem("user")
       window.location.href = "/login"
       toast.error("انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى")
-    } else if (error.response?.data?.message) {
-      toast.error(error.response.data.message)
+    } else if (error.response?.data?.data?.message || error.response?.data?.message) {
+      toast.error(error.response?.data?.data?.message || error.response.data.message)
     } else {
       toast.error("حدث خطأ. يرجى المحاولة مرة أخرى")
     }
-    console.log("api.interceptors.response", Promise.reject(error));
-
-    Promise.reject(error)
+    return Promise.reject(error)
   },
 )
 
@@ -68,7 +65,6 @@ export function handleError(error) {
   // Use provided translation function or fallback to default
 
   if (axios.isAxiosError(error)) {
-    console.log("handleError", error);
     if (!error.response) {
       return navigator.onLine ? defaultT('errors.serverDown') :
         defaultT('errors.networkError');
@@ -88,7 +84,6 @@ export function handleError(error) {
         return (data).messageAr;
       }
       if ('message' in data) {
-        console.log(data);
         return (data).message; // Keep original API message
       }
     }

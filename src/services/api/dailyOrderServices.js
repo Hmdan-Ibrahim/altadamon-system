@@ -13,41 +13,58 @@ export async function getDailyOrdersByProject(projectId, filter) {
     return res.data
 }
 
-export async function uploadImages(images = []) {
-
-    const uploadedImages = await Promise.all(
-
-        images.map(async (image) => {
-            const compressed =
-                await imageCompression(image, {
-                    maxSizeMB: 0.8,
-                    maxWidthOrHeight: 1400,
-                    initialQuality: 0.8,
-                    useWebWorker: true,
+export async function uploadImages(images = [], projectId, sendingDate) {
+    const uploadedKeys = []
+    try {
+        const uploadedImages = await Promise.all(
+            images.map(async (image, index) => {
+                const compressed =
+                    await imageCompression(image, {
+                        maxSizeMB: 0.8,
+                        maxWidthOrHeight: 1400,
+                        initialQuality: 0.8,
+                        useWebWorker: true,
+                    });
+                const { data } = await api.post("/storage/upload-url", {
+                    projectId,
+                    sendingDate,
+                    contentType: compressed.type
                 });
 
-            const fileName =
-                `${Date.now()}`;
+                const response = await fetch(data.data.uploadUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": compressed.type
+                    },
+                    body: compressed
+                });
 
-            const { data, error } = await supabase.storage
-                .from("order-images")
-                .upload(fileName, compressed);
+                if (!response.ok)
+                    throw new Error(`حدث خطأ أثناء رفع الصورة ${index + 1}`);
 
-            if (error) throw error;
+                uploadedKeys.push(data.data.key)
+                return data.data.key;
+            })
+        );
 
-            const { data: publicUrlData } = supabase.storage
-                .from("order-images")
-                .getPublicUrl(fileName);
-
-            return publicUrlData.publicUrl;
-        })
-    );
-
-    return uploadedImages;
+        return uploadedImages
+    }
+    catch (err) {
+        if (uploadedKeys.length) {
+            try {
+                await api.post("/storage/delete-many", {
+                    keys: uploadedKeys,
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        throw err;
+    }
 }
 
-export async function deleteImages(images = []) {
-
+export async function deleteSubabaseImages(images = []) {
+    images = images.filter(image => String(image).includes("supabase"))
     if (!images.length) return;
     const paths = images.map((url) => {
 
@@ -64,57 +81,102 @@ export async function deleteImages(images = []) {
     if (error) throw "error";
 }
 
-
-export async function createOrder(order) {
+export async function createOrder({ projectId, order }) {
     let buildingImage;
     let images = [];
+    console.log(order);
+    return
 
-    if (order.buildingImage instanceof FileList) {
-        const uploaded = await uploadImages([order.buildingImage[0]]);
-        buildingImage = uploaded[0];
-    }
-    if (order.images instanceof FileList) {
-        images = await uploadImages(Array.from(order.images));
-    }
+    try {
+        if (order.buildingImage instanceof FileList) {
+            const uploaded = await uploadImages([order.buildingImage[0]], projectId, order.sendingDate);
+            buildingImage = uploaded[0];
+        }
+        if (order.images instanceof FileList) {
+            images = await uploadImages(Array.from(order.images), projectId, order.sendingDate);
+        }
 
-    const res = await api.post(`/daily-orders`, { ...order, buildingImage, images })
-    return res.data
+        const res = await api.post(`/daily-orders`, { ...order, buildingImage, images })
+        return res.data
+    } catch (err) {
+        const keys = [
+            ...(images || []),
+            ...(buildingImage ? [buildingImage] : [])
+        ];
+
+        if (keys.length) {
+            try {
+                await api.post("/storage/delete-many", {
+                    keys,
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        throw err;
+    }
 }
 
-export async function updateOrder({ orderID, order }) {
+export async function updateOrder({ projectId, orderID, order }) {
     const updatedOrder = { ...order };
-
-    if (updatedOrder.buildingImage instanceof FileList) {
-        if (order.oldBuildingImage) {
-            await deleteImages([order.oldBuildingImage]);
+    delete updatedOrder.sendingDate
+    delete updatedOrder.oldBuildingImage
+    delete updatedOrder.oldImages
+    try {
+        if (updatedOrder.buildingImage instanceof FileList) {
+            const uploaded = await uploadImages([order.buildingImage[0]], projectId, order.sendingDate);
+            updatedOrder.buildingImage = uploaded[0];
         }
-        const uploaded = await uploadImages([order.buildingImage[0]]);
-        updatedOrder.buildingImage = uploaded[0];
-    }
 
-    if (order.images instanceof FileList) {
-        if (order.oldImages?.length > 0) {
-            await deleteImages(order.oldImages);
+        if (order.images instanceof FileList) {
+            updatedOrder.images = await uploadImages(Array.from(order.images), projectId, order.sendingDate);
         }
-        updatedOrder.images = await uploadImages(Array.from(order.images));
-    }
 
-    const res = await api.patch(`/daily-orders/${orderID}`, updatedOrder)
-    return res.data
+        const res = await api.patch(`/daily-orders/${orderID}`, updatedOrder)
+
+        try {
+            await deleteSubabaseImages([
+                ...(order.oldImages || []),
+                ...(order.oldBuildingImage ? [order.oldBuildingImage] : []),
+            ]);
+        } catch (err) {
+            console.error(err);
+        }
+        return res.data
+    }
+    catch (err) {
+        const keys = [
+            ...(updatedOrder.buildingImage ? [updatedOrder.buildingImage] : []),
+            ...updatedOrder.images
+        ];
+
+        if (keys.length) {
+            try {
+                await api.post("/storage/delete-many", {
+                    keys
+                });
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+    }
 }
 
 export async function deleteOrder(order) {
     const { id: orderID, buildingImage, images = [] } = order
-
-    if (buildingImage) {
-        await deleteImages([buildingImage]);
-    }
-    if (images) {
-        await deleteImages(images);
-    }
-
     const res = await api.delete(`/daily-orders/${orderID}`)
-    return res
+
+    try {
+        await deleteSubabaseImages([
+            ...(images || []),
+            ...(buildingImage ? [buildingImage] : []),
+        ]);
+    } catch (err) {
+        console.error(err);
+    }
+
+    return res.data
 }
 
 export async function downloadOrdersPptx(filter, socketId) {

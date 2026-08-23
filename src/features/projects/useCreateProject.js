@@ -12,7 +12,6 @@ export const useCreateProject = () => {
     const { isLoading, regions, error } = useRegions()
     const [searchParams] = useSearchParams()
     const regionId = regions?.find(region => region.name === searchParams.get("region"))?._id || user?.region
-    console.log("regionIdregionId", regionId);
 
     const { isLoading: isCreating, mutate: createNewProject } = useMutation({
         mutationFn: async (data) => {

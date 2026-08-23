@@ -62,8 +62,6 @@ export default function VehiclesPage() {
 
   const [regionFilter, setRegionFilter] = useState(regions[0])
   const [projectFilter, setProjectFilter] = useState(projects[0])
-  console.log("projectFilter", projectFilter);
-
   const filteredProjects = mockVehicles.filter(project => project.project === projectFilter.label)
 
 

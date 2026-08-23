@@ -9,12 +9,8 @@ export default function ReadExelFile({ setDataFromFile }) {
         reader.onload = (event) => {
             const data = new Uint8Array(event.target.result);
             const workbook = read(data, { type: "array" });
-
-            console.log("workbook", workbook);
             const sheetName = workbook.SheetNames[0];
-            console.log("sheetName", sheetName);
             const worksheet = workbook.Sheets[sheetName];
-            console.log("worksheet", worksheet);
 
             const jsonData = utils.sheet_to_json(worksheet);
             setDataFromFile(jsonData)

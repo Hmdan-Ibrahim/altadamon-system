@@ -6,9 +6,8 @@ export const socket = io(
 
 socket.on("connect", () => {
     console.log("Connected");
-    console.log("Socket ID:", socket.id);
 });
 
 socket.on("connect_error", (err) => {
-    console.log("Socket Error:", err);
+    console.error("Socket Error:", err);
 });

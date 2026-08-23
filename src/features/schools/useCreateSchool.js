@@ -20,8 +20,6 @@ export const useCreateSchool = () => {
             return res
         },
         onSuccess: (data) => {
-            console.log("data", data);
-
             toast.success(data.message);
             queryClient.invalidateQueries({ queryKey: ["schools"] });
         },
