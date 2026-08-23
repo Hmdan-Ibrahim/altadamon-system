@@ -11,7 +11,7 @@ export default function ProjectsPage() {
     <>
       <Card>
         <CardContent>
-          <AuthFeature roles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
+          <AuthFeature roles={[Roles.MANAGER, Roles.REGION_MANAGER, , Roles.SUPERVISOR]}>
             <SchoolsTableOperations />
           </AuthFeature>
           <SchoolsTable />
