@@ -100,7 +100,7 @@ function ReportRow({ reportType, showDays, report, index }) {
                     value={note}
                     onChange={(e) => onNoteChange(index, e.target.value)}
                 /> */}
-                {/* <DownloadOrdersPptx filter={{ school: school._id }} /> */}
+                { !isTransporter && <DownloadOrdersPptx filter={{ school: school._id }} /> }
 
             </TableCell>
         </TableRow>
