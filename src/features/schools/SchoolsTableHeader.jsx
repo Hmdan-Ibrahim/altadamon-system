@@ -1,4 +1,6 @@
+import AuthFeature from '@/src/components/gards/AuthFeature'
 import { TableHead, TableHeader, TableRow } from '@/src/components/ui/table'
+import { Roles } from '@/src/lib/utils/Entities'
 import React from 'react'
 
 function SchoolsTableHeader() {
@@ -11,7 +13,9 @@ function SchoolsTableHeader() {
                 <TableHead>المنطقة</TableHead>
                 <TableHead>الحي</TableHead>
                 <TableHead>الرقم الوزاري</TableHead>
-                <TableHead>الاجراءات</TableHead>
+                <AuthFeature roles={[Roles.ADMIN]}>
+                    <TableHead>الاجراءات</TableHead>
+                </AuthFeature>
             </TableRow>
         </TableHeader>
     )

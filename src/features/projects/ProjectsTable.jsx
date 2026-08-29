@@ -6,6 +6,8 @@ import ProjectRow from './ProjectRow';
 import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 import AddEditProject from './AddEditProject';
+import AuthFeature from '@/src/components/gards/AuthFeature';
+import { Roles } from '@/src/lib/utils/Entities';
 
 function ProjectTable() {
 
@@ -30,7 +32,9 @@ function ProjectTable() {
                         className="pr-10"
                     />
                 </div>
-                <AddEditProject />
+                <AuthFeature roles={[Roles.ADMIN]}>
+                    <AddEditProject />
+                </AuthFeature>
             </div>
             <div className="border rounded-lg">
                 <Table>
@@ -40,7 +44,9 @@ function ProjectTable() {
                             <TableHead>اسم المشروع</TableHead>
                             <TableHead>المدير</TableHead>
                             <TableHead>المحمول</TableHead>
-                            <TableHead>الاجراءات</TableHead>
+                            <AuthFeature roles={[Roles.ADMIN]}>
+                                <TableHead>الاجراءات</TableHead>
+                            </AuthFeature>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

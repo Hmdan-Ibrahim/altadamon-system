@@ -5,6 +5,7 @@ import DeleteOrder from './DeleteOrder'
 import { formatDateWithTime, formatDayMonthYear } from '@/src/lib/utils'
 import { Roles, StatusOrder } from '@/src/lib/utils/Entities'
 import AuthFeature from '../../components/gards/AuthFeature'
+import ViewOrderImages from './ViewOrderImages'
 
 function statusStyele(status, beforeToday) {
     if (status === StatusOrder.NOT_IMPLEMENTED && beforeToday) return "bg-red-400"
@@ -32,12 +33,15 @@ function DailyOrderRow({ order, index, beforeToday }) {
             </AuthFeature>
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
-                <div className="flex items-center justify-enter gap-2">
-                    <AddEditOrder dailyOrder={order} />
-                    <AuthFeature withoutRoles={[Roles.DRIVER]}>
-                        <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
-                    </AuthFeature>
-                </div>
+                <ViewOrderImages buildingImage={buildingImage} images={images} />
+                <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
+                    <div className="flex items-center justify-enter gap-2">
+                        <AddEditOrder dailyOrder={order} />
+                        <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                            <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
+                        </AuthFeature>
+                    </div>
+                </AuthFeature>
             </TableCell>
         </TableRow>
     )

@@ -10,6 +10,8 @@ import { isBefore, startOfDay } from 'date-fns';
 import PrintPortal from '@/src/components/layout/PrintPortal';
 import DailyOrdersTableHeader from './DailyOrdersTableHeader';
 import { FieldSelect } from '@/src/components/FieldSelect';
+import AuthFeature from '@/src/components/gards/AuthFeature';
+import { Roles } from '@/src/lib/utils/Entities';
 
 const searchFields = [
     { key: "school", label: "المدرسة" },
@@ -54,7 +56,9 @@ function DailyOrdersTable() {
                         className="pr-10"
                     />
                 </div>
-                <AddEditOrder />
+                <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
+                    <AddEditOrder />
+                </AuthFeature>
             </div>
             <PrintPortal>
                 <div className="border rounded-lg">

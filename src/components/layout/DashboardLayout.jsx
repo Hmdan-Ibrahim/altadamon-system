@@ -28,7 +28,7 @@ const navigation = [
     // { name: "السيارات", href: "/dashboard/vehicles", icon: Truck, viewFor: [Roles.MANAGER] },
     // { name: "الآبار", href: "/dashboard/wells", icon: Droplet, viewFor: [Roles.MANAGER] },
     { name: "الطلبات اليومية", href: "/dashboard/daily-orders", icon: ClipboardList },
-    { name: "الجدول الزمني", href: "/dashboard/schedule-table", icon: ClipboardList, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER] },
+    { name: "الجدول الزمني", href: "/dashboard/schedule-table", icon: ClipboardList, viewFor: [Roles.ADMIN] },
     { name: "التقارير", href: "/dashboard/reports", icon: BarChart3 },
 ]
 
@@ -117,7 +117,7 @@ export function DashboardLayout() {
                         {user && (
                             <div className="px-6 py-1  ">
                                 <p className="text-sm font-medium">{user?.name}</p>
-                                <p className="text-xs text-primary mt-1">{user?.role}</p>
+                                {/* <p className="text-xs text-primary mt-1">{user?.role}</p> */}
                             </div>
                         )}
                     </div>

@@ -8,6 +8,8 @@ import SchoolRow from './SchoolRow';
 import AddEditSchool from './AddEditSchool';
 import SchoolsTableHeader from './SchoolsTableHeader';
 import { FieldSelect } from '@/src/components/FieldSelect';
+import AuthFeature from '@/src/components/gards/AuthFeature';
+import { Roles } from '@/src/lib/utils/Entities';
 
 const schoolFields = [
     { key: "name", label: "المدرسة" },
@@ -51,7 +53,9 @@ function SchoolsTable() {
                         className="pr-10"
                     />
                 </div>
-                <AddEditSchool />
+                <AuthFeature roles={[Roles.ADMIN]}>
+                    <AddEditSchool />
+                </AuthFeature>
             </div>
             <div className="border rounded-lg">
                 <Table>

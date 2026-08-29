@@ -187,7 +187,9 @@ function ReportsTable() {
                     </Table>
                 </div>
             </PrintPortal>
-            <ExportToExcel data={filteredReports} date={date} projectName={projectName} />
+            <AuthFeature roles={[Roles.ADMIN, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
+                <ExportToExcel data={filteredReports} date={date} projectName={projectName} />
+            </AuthFeature>
         </>
     )
 }

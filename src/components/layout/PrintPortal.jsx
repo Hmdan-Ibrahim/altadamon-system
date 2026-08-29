@@ -6,6 +6,8 @@ import { useProjects } from "@/src/features/projects/useProjects";
 import { useSearchParams } from "react-router-dom";
 import api from "@/src/services/api/api";
 import { useQuery } from "@tanstack/react-query";
+import AuthFeature from "../gards/AuthFeature";
+import { Roles } from "@/src/lib/utils/Entities";
 
 const preloadImage = (src) =>
     new Promise((resolve, reject) => {
@@ -75,18 +77,20 @@ function PrintPortal({ children }) {
 
     return <div className='print-area'>
         {children}
-        {printMode && isSuccess && <div className="flex h-50 text-center justify-between">
-            <div className="">
-                <h4>مدير المشروع</h4>
-                <h4>{signatures?.projectManager?.name}</h4>
-                <img src={signatures?.projectManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
-            </div>
-            <div className="">
-                <h4>مدير المنطقة</h4>
-                <h4>{signatures?.regionManager?.name}</h4>
-                <img src={signatures?.regionManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
-            </div>
-        </div>}
+        <AuthFeature roles={[Roles.ADMIN, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
+            {printMode && isSuccess && <div className="flex h-50 text-center justify-between">
+                <div className="">
+                    <h4>مدير المشروع</h4>
+                    <h4>{signatures?.projectManager?.name}</h4>
+                    <img src={signatures?.projectManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
+                </div>
+                <div className="">
+                    <h4>مدير المنطقة</h4>
+                    <h4>{signatures?.regionManager?.name}</h4>
+                    <img src={signatures?.regionManager?.imageSignature} className="h-30 w-60" alt="لايوجد توقيع" />
+                </div>
+            </div>}
+        </AuthFeature>
     </div>;
 }
 

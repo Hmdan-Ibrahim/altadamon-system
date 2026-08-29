@@ -7,7 +7,7 @@ import { Roles } from "../lib/utils/Entities"
 
 export default function ScheduleTablePage() {
     return (
-        <AuthGuard roles={[Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
+        <AuthGuard roles={[Roles.ADMIN]}>
             <div className="space-y-6">
                 {/* Filters */}
                 <Card>

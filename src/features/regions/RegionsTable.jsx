@@ -3,6 +3,8 @@ import React from 'react'
 import RegionRow from './RegionRow';
 import { useRegions } from './useRegions';
 import { handleError } from '@/src/services/api/api';
+import AuthFeature from '@/src/components/gards/AuthFeature';
+import { Roles } from '@/src/lib/utils/Entities';
 
 function RegionTable() {
     const { isLoading, regions, error } = useRegions()
@@ -21,7 +23,9 @@ function RegionTable() {
                             <TableHead>الاسم</TableHead>
                             <TableHead>المدير</TableHead>
                             <TableHead>المحمول</TableHead>
-                            <TableHead>الاجراءات</TableHead>
+                            <AuthFeature roles={[Roles.ADMIN]}>
+                                <TableHead>الاجراءات</TableHead>
+                            </AuthFeature>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

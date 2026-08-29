@@ -100,7 +100,9 @@ function ReportRow({ reportType, showDays, report, index }) {
                     value={note}
                     onChange={(e) => onNoteChange(index, e.target.value)}
                 /> */}
-                { !isTransporter && <DownloadOrdersPptx filter={{ school: school._id }} /> }
+                <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
+                    {!isTransporter && <DownloadOrdersPptx filter={{ school: school._id }} />}
+                </AuthFeature>
 
             </TableCell>
         </TableRow>

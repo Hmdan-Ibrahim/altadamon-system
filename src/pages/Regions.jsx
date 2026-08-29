@@ -3,6 +3,7 @@ import { Card, CardContent } from "../components/ui/card"
 import AddEditRegion from "../features/regions/AddEditRegion"
 import { Roles } from "../lib/utils/Entities"
 import AuthGuard from "../components/gards/AuthGuard"
+import AuthFeature from "../components/gards/AuthFeature"
 
 
 export default function Regions() {
@@ -10,7 +11,10 @@ export default function Regions() {
     <AuthGuard roles={[Roles.MANAGER]}>
       <Card>
         <CardContent>
-          <AddEditRegion />
+          <AuthFeature roles={[Roles.ADMIN]}>
+            <AddEditRegion />
+          </AuthFeature>
+
           <RegionsTable />
         </CardContent>
       </Card>
