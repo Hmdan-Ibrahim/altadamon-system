@@ -81,8 +81,8 @@ function ReportRow({ reportType, showDays, report, index }) {
             </>
             }
             {reportType === "استحقاق المشروع" && <>
-                <TableCell>{accountName}</TableCell>
-                <TableCell>{accountNumber}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
             </>}
             {
                 (reportType === "ايرادات المشروع") && <>

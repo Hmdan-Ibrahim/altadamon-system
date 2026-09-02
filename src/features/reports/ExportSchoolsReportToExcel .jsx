@@ -3,7 +3,7 @@ import { formatDayMonthYear } from "@/src/lib/utils";
 import { getDaysInMonth } from "date-fns";
 import * as XLSX from "xlsx";
 
-export const ExportToExcel = ({ data, date, projectName }) => {
+export const ExportSchoolsReportToExcel = ({ data, date, projectName }) => {
 
     function handleExportToExcel() {
         const numMonth = getDaysInMonth(new Date(date).getFullYear(), new Date(date).getMonth() + 1)

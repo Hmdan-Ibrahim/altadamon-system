@@ -13,7 +13,8 @@ import { formatDayMonthYear, getDayName } from '@/src/lib/utils';
 import { FieldSelect } from '@/src/components/FieldSelect';
 import AuthFeature from '@/src/components/gards/AuthFeature';
 import { Roles } from '@/src/lib/utils/Entities';
-import { ExportToExcel } from './ExportToExcel ';
+import { ExportSchoolsReportToExcel } from './ExportSchoolsReportToExcel ';
+import { ExportTransportersReportToExcel } from './ExportTransportersReportToExcel ';
 
 const searchFields = [
     { key: "transporter", label: "الموصل" },
@@ -188,7 +189,8 @@ function ReportsTable() {
                 </div>
             </PrintPortal>
             <AuthFeature roles={[Roles.ADMIN, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER]}>
-                <ExportToExcel data={filteredReports} date={date} projectName={projectName} />
+                {isTransporter && <ExportTransportersReportToExcel data={filteredReports} date={date} projectName={projectName} reportType={reportType} />}
+                {!isTransporter && <ExportSchoolsReportToExcel data={filteredReports} date={date} projectName={projectName} />}
             </AuthFeature>
         </>
     )
