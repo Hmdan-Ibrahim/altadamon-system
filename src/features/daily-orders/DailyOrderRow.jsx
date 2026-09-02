@@ -6,6 +6,7 @@ import { formatDateWithTime, formatDayMonthYear } from '@/src/lib/utils'
 import { Roles, StatusOrder } from '@/src/lib/utils/Entities'
 import AuthFeature from '../../components/gards/AuthFeature'
 import ViewOrderImages from './ViewOrderImages'
+import DownloadOrdersPptx from './DownloadOrdersPptx'
 
 function statusStyele(status, beforeToday) {
     if (status === StatusOrder.NOT_IMPLEMENTED && beforeToday) return "bg-red-400"
@@ -34,6 +35,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
                 <ViewOrderImages buildingImage={buildingImage} images={images} />
+                <DownloadOrdersPptx filter={{ school: school._id, orderID: dailyOrderId }} title="تحميل تقرير المدرسة" />
                 <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
                     <div className="flex items-center justify-enter gap-2">
                         <AddEditOrder dailyOrder={order} />
