@@ -13,8 +13,8 @@ export const ExportTransportersReportToExcel = ({ data, date, projectName, repor
         const selectedDay = currentDate.getDate();
 
         const rows = data.map((item, i) => {
-            const { transporter, school, operator, vehicle, RequiredCapacity, well, detailsOfDays, monthlyOrders, monthlyRevenue, totalCapacity, replyPrice, ContractPricePerTon, monthlyPrice } = item
-            const { name = '-', accountName = '-', accountNumber = '-', trip = '-' } = transporter || {}
+            const { transporter, operator, vehicle, RequiredCapacity, well, detailsOfDays, monthlyOrders, monthlyRevenue, totalCapacity, replyPrice, ContractPricePerTon, monthlyPrice } = item
+            const { name = '-', trip = '-' } = transporter || {}
             const row = {
                 "م": i + 1,
                 "الاسم/المقاول": operator == "ي-كاش" ? "مشتريات" : name,
