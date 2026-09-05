@@ -107,7 +107,7 @@ function SchoolForm({
                             control={control}
                             name="district"
 
-                            rules={{ required: "هذا الحقل مطلوب" }}
+                            // rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
                                 <Input {...field} placeholder="المنطقة" disabled={isWorking} className={`${errors.district && "border-red-500"}`} />
                             )}
@@ -120,7 +120,7 @@ function SchoolForm({
                             control={control}
                             name="neighborhood"
 
-                            rules={{ required: "هذا الحقل مطلوب" }}
+                            // rules={{ required: "هذا الحقل مطلوب" }}
                             render={({ field }) => (
                                 <Input {...field} placeholder="اسم الحي" disabled={isWorking} className={`${errors.neighborhood && "border-red-500"}`} />
                             )}

@@ -83,6 +83,7 @@ function OrderForm({
     const operator = watch("operator");
     const buildingImage = watch("buildingImage")
     const images = watch("images");
+    const well = watch("well");
 
     const { isLoading: loadVehicles, vehicles } = useVehicles()
     const transporterRole = operator === "التضامن" ? Roles.DRIVER : Roles.CONTRACTOR
@@ -242,7 +243,7 @@ function OrderForm({
                             {errors.RequiredCapacity && <p className="text-red-500 text-sm">{errors.RequiredCapacity.message}</p>}
                         </div>
                     }
-                    {operator !== "التضامن" &&
+                    {(operator !== "التضامن" || !wells.find(w => w._id == well)?.pricePerUnit) &&
                         <div className="space-y-2">
                             <Label htmlFor="replyPrice">السعر المحدد</Label>
                             <Controller

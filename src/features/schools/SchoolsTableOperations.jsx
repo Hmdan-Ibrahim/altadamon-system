@@ -10,7 +10,9 @@ function SchoolsTableOperations() {
             <ForRoles roles={[Roles.MANAGER]}>
                 <SelectRegion />
             </ForRoles>
-            <SelectProject />
+            <ForRoles roles={[Roles.MANAGER, Roles.REGION_MANAGER]}>
+                <SelectProject />
+            </ForRoles>
         </div>
     );
 }
