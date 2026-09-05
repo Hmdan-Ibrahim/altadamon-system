@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useDeleteProject = () => {
     const queryClient = useQueryClient();
 
-    const { isLoading: isDeleting, mutate: deleteProject } = useMutation({
+    const { isPending: isDeleting, mutate: deleteProject } = useMutation({
         mutationFn: deleteProjectApi,
         onSuccess: (data) => {
             toast.success(data.message);

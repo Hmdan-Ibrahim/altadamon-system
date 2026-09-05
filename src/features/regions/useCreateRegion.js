@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useCreateRegion = () => {
     const queryClient = useQueryClient();
 
-    const { isLoading: isCrating, mutate: createNewRegion } = useMutation({
+    const { isPending: isCrating, mutate: createNewRegion } = useMutation({
         mutationFn: createRegion,
         onSuccess: (data) => {
             toast.success(data.message);

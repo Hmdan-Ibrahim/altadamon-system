@@ -20,7 +20,7 @@ export const ExportTransportersReportToExcel = ({ data, date, projectName, repor
                 "الاسم/المقاول": operator == "ي-كاش" ? "مشتريات" : name,
                 "المشغل": operator == "ي-كاش" ? "" : operator,
                 "السيارة": vehicle || "",
-                "السعر": RequiredCapacity
+                "السعة": RequiredCapacity
             }
 
             const daysMap = {};
@@ -37,44 +37,42 @@ export const ExportTransportersReportToExcel = ({ data, date, projectName, repor
             }
 
             row["إجمالي الطلبات"] = monthlyOrders ?? "";
-            row["السعة الإجمالية"] = totalCapacity ?? "";
+            row["إجمالي الأطنان الشهرية"] = totalCapacity ?? "";
 
             if (["تقرير شهري", "استحقاق المشروع"].includes(reportType)) {
                 row["التحلية"] = well ?? "";
                 row["سعر الرد"] = replyPrice ?? "";
 
                 if (reportType === "تقرير شهري") {
-                    row["قيمة اليوم"] = +((replyPrice ?? 0) * (daysMap[selectedDay]?.totalOrdersDay ?? 0)).toFixed(3);
+                    row["استحقاق اليوم"] = +((replyPrice ?? 0) * (daysMap[selectedDay]?.totalOrdersDay ?? 0)).toFixed(3);
                 }
-
-                row["السعر الشهري"] = monthlyPrice ?? "";
+                row["اجمالي الدخولية (الاستحقاق)"] = monthlyPrice ?? "";
             }
 
             if (reportType === "ايرادات المشروع") {
-                row["سعر الطن"] = ContractPricePerTon ?? "";
-                row["الإيراد الشهري"] = monthlyRevenue ?? "";
-                row["الرحلة"] = trip ?? 0;
-                row["قيمة الرحلات"] =
-                    trip && monthlyOrders ? trip * monthlyOrders : "";
+                row["سعر الطن"] = ContractPricePerTon || "";
+                row["مبلغ الإيراد الشهري"] = monthlyRevenue || "";
+                row["سعر الترب"] = trip || "";
+                row["مبلغ الترب"] = (trip * monthlyOrders) || "";
             }
 
             return row;
         });
 
-        const headers = ["م", "الاسم/المقاول", "المشغل", "السيارة", "السعر", ...days.map(day => day.toString()),];
+        const headers = ["م", "الاسم/المقاول", "المشغل", "السيارة", "السعة", ...days.map(day => day.toString()),];
         if (reportType === "تقرير شهري") { headers.push("طلبات اليوم", "كمية اليوم"); }
-        headers.push("إجمالي الطلبات", "السعة الإجمالية");
+        headers.push("إجمالي الطلبات", "إجمالي الأطنان الشهرية");
 
         if (["تقرير شهري", "استحقاق المشروع"].includes(reportType)) {
             headers.push("التحلية", "سعر الرد");
         }
         if (reportType === "تقرير شهري") {
-            headers.push("قيمة اليوم");
+            headers.push("استحقاق اليوم");
         }
-        headers.push("السعر الشهري");
+        headers.push("اجمالي الدخولية (الاستحقاق)");
 
         if (reportType === "ايرادات المشروع") {
-            headers.push("سعر الطن", "الإيراد الشهري", "الرحلة", "قيمة الرحلات");
+            headers.push("سعر الطن", "مبلغ الإيراد الشهري", "سعر الترب", "مبلغ الترب");
         }
 
         const worksheet = XLSX.utils.json_to_sheet([]);

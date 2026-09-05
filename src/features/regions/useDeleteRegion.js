@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useDeleteRegion = () => {
     const queryClient = useQueryClient();
 
-    const { isLoading: isDeleting, mutate: deleteRegion } = useMutation({
+    const { isPending: isDeleting, mutate: deleteRegion } = useMutation({
         mutationFn: deleteRegionApi,
         onSuccess: (data) => {
             toast.success(data.message);

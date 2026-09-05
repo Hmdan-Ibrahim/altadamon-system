@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useEditProject = () => {
     const queryClient = useQueryClient();
 
-    const { isLoading: isEditing, mutate: editProject } = useMutation({
+    const { isPending: isEditing, mutate: editProject } = useMutation({
         mutationFn: updateProject,
         onSuccess: (data) => {
 

@@ -26,7 +26,7 @@ export const useDailyOrders = () => {
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
     const filter = { sendingDate: date };
 
-    const { isLoading, data: dailyOrders = [], error } = useQuery({
+    const { isPending: isLoading, data: dailyOrders = [], error } = useQuery({
         queryKey: ["daily-orders", matchedProject, filter],
         queryFn: async () => {
             const { data } = await getDailyOrdersByProject(matchedProject, filter)

@@ -21,6 +21,7 @@ function DailyOrdersTableHeader() {
                 <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]}>
                     <TableHead>السعر</TableHead>
                 </AuthFeature>
+                <TableHead>حالة الاعتماد</TableHead>
                 <TableHead>ملاحظات</TableHead>
                 <TableHead>الاجراءات</TableHead>
             </TableRow>

@@ -8,9 +8,9 @@ import { Roles } from '@/src/lib/utils/Entities'
 
 export const useProjects = () => {
     const { user } = useAuth()
-    const isManagerRegionManager = [Roles.MANAGER, Roles.REGION_MANAGER].includes(user.role);
+    const allowedRoles = [Roles.ADMIN, Roles.MANAGER, Roles.REGION_MANAGER].includes(user.role);
 
-    if (!isManagerRegionManager) {
+    if (!allowedRoles) {
         return {
             isLoading: false,
             projects: [],
@@ -34,7 +34,7 @@ export const useProjects = () => {
     const activeRegion = regions?.find(r => r.name === activeRegionName);
     const filter = { region: activeRegion?._id || user.region };
 
-    const { isLoading, data: projects = [], error } = useQuery({
+    const { isPending: isLoading, data: projects = [], error } = useQuery({
         queryKey: ["projects", filter],
         queryFn: async () => {
             const { data } = await getProjects(filter)

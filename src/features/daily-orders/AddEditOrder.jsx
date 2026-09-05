@@ -14,7 +14,7 @@ function AddEditOrder({ dailyOrder }) {
                 <Button variant="ghost" size="icon" onClick={() => setFormOpen(true)}>
                     <Edit className="w-4 h-4" />
                 </Button> :
-                <AuthFeature withoutRoles={[Roles.DRIVER]}>
+                <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]}>
                     <Button onClick={() => setFormOpen(true)}>
                         <Plus className="w-4 h-4" />
                         إضافة طلب جديد

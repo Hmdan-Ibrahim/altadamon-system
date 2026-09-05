@@ -7,7 +7,7 @@ import { Button } from "../components/ui/button"
 
 export default function LoginPage() {
     const { control, handleSubmit, formState: { errors } } = useForm()
-    const { isLoading, login } = useLogin()
+    const { isPending: isLoading, login } = useLogin()
 
     const onSubmit = login
     const onError = async (e) => {

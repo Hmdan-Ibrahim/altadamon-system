@@ -20,16 +20,16 @@ import { useAuth } from '@/src/hooks/useAuth'
 import { Roles } from '@/src/lib/utils/Entities'
 
 const navigation = [
-    { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
+    { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard, viewFor: Object.values(Roles) },
     { name: "المناطق", href: "/dashboard/regions", icon: MapPin, viewFor: [Roles.MANAGER] },
     { name: "المشاريع", href: "/dashboard/projects", icon: FolderKanban, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER] },
     { name: "المدارس", href: "/dashboard/schools", icon: School, viewFor: [Roles.MANAGER, Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR] },
     // { name: "المستخدمين", href: "/dashboard/users", icon: Users, viewFor: [Roles.MANAGER] },
     // { name: "السيارات", href: "/dashboard/vehicles", icon: Truck, viewFor: [Roles.MANAGER] },
     // { name: "الآبار", href: "/dashboard/wells", icon: Droplet, viewFor: [Roles.MANAGER] },
-    { name: "الطلبات اليومية", href: "/dashboard/daily-orders", icon: ClipboardList },
+    { name: "الطلبات اليومية", href: "/dashboard/daily-orders", icon: ClipboardList, viewFor: Object.values(Roles) },
     { name: "الجدول الزمني", href: "/dashboard/schedule-table", icon: ClipboardList, viewFor: [Roles.ADMIN] },
-    { name: "التقارير", href: "/dashboard/reports", icon: BarChart3 },
+    { name: "التقارير", href: "/dashboard/reports", icon: BarChart3, viewFor: Object.values(Roles) },
 ]
 
 export function DashboardLayout() {
@@ -75,9 +75,9 @@ export function DashboardLayout() {
                         {navigation.map((item) => {
                             const isActive = pathname === item.href
                             return (
-                                <AuthFeature roles={item.viewFor}>
+                                <AuthFeature key={item.name} roles={item.viewFor}>
                                     <Link
-                                        key={item.name}
+
                                         to={item.href}
                                         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
                                             }`}

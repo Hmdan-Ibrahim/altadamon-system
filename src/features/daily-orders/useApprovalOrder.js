@@ -1,13 +1,13 @@
 import { handleError } from "@/src/services/api/api";
-import { deleteOrder as deleteOrderApi } from "@/src/services/api/dailyOrderServices"
+import { ApprovalOrder } from "@/src/services/api/dailyOrderServices"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast";
 
-export const useDeleteOrder = () => {
+export const useApprovalOrder = () => {
     const queryClient = useQueryClient();
 
-    const { isPending: isDeleting, mutate: deleteOrder } = useMutation({
-        mutationFn: deleteOrderApi,
+    const { isPending: isApproval, mutate: approvalOrder } = useMutation({
+        mutationFn: ApprovalOrder,
         onSuccess: (data) => {
             toast.success(data.message);
             queryClient.invalidateQueries({ queryKey: ["daily-orders"] });
@@ -15,5 +15,5 @@ export const useDeleteOrder = () => {
         onError: (err) => toast.error(handleError(err)),
     })
 
-    return { isDeleting, deleteOrder }
+    return { isApproval, approvalOrder }
 }

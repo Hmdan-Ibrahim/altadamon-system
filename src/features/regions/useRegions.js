@@ -4,10 +4,9 @@ import { getRegions } from "@/src/services/api/regionServices"
 import { useQuery } from "@tanstack/react-query"
 export const useRegions = () => {
     const { user } = useAuth();
-    const isManager = user.role === Roles.MANAGER;
+    const allowedRoles = [Roles.ADMIN, Roles.MANAGER].includes(user.role);
 
-    // إذا لم يكن مدير → لا تُشغّل useQuery أبدًا
-    if (!isManager) {
+    if (!allowedRoles) {
         return {
             isLoading: false,
             regions: [],
@@ -25,7 +24,7 @@ export const useRegions = () => {
     });
 
     return {
-        isLoading: query.isLoading,
+        isLoading: query.isPending,
         regions: query.data || [],
         error: query.error
     };

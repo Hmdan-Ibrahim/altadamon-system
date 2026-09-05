@@ -192,3 +192,10 @@ export async function downloadOrdersPptx(filter, socketId) {
 
     return res.data;
 }
+
+export async function ApprovalOrder({ orderID, approvalStatus: ApprovalStatus }) {
+    console.log(orderID, ApprovalStatus);
+    const res = await api.patch(`/daily-orders/${orderID}/approval`, { ApprovalStatus: ApprovalStatus });
+
+    return res.data;
+}
