@@ -53,9 +53,9 @@ function OrderForm({
 
     const [searchParams] = useSearchParams()
     const date = searchParams.get("date")
-    const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id
+    const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id || user?.project
 
-    const { control, handleSubmit, watch, reset, formState } = useForm({
+    const { control, handleSubmit, watch, reset, getValues, formState } = useForm({
         defaultValues: isEditSession
             ? {
                 school: orderToEdit?.school._id,
@@ -71,6 +71,7 @@ function OrderForm({
                 notes: orderToEdit?.notes,
                 buildingImage: orderToEdit?.buildingImage,
                 images: orderToEdit?.images,
+                video: orderToEdit?.video,
             }
             : {
                 project: projectId,
@@ -83,7 +84,8 @@ function OrderForm({
     const operator = watch("operator");
     const buildingImage = watch("buildingImage")
     const images = watch("images");
-    const well = watch("well");
+    const video = watch("video");
+    const well = wells?.find(w => w._id == watch("well"));
 
     const { isLoading: loadVehicles, vehicles } = useVehicles()
     const transporterRole = operator === "التضامن" ? Roles.DRIVER : Roles.CONTRACTOR
@@ -243,7 +245,7 @@ function OrderForm({
                             {errors.RequiredCapacity && <p className="text-red-500 text-sm">{errors.RequiredCapacity.message}</p>}
                         </div>
                     }
-                    {(operator !== "التضامن" || !wells.find(w => w._id == well)?.pricePerUnit) &&
+                    {(operator !== "التضامن" || (!well?.pricePerUnit && well?.name != "رد مقسوم")) &&
                         <div className="space-y-2">
                             <Label htmlFor="replyPrice">السعر المحدد</Label>
                             <Controller
@@ -335,7 +337,17 @@ function OrderForm({
                             <Controller
                                 control={control}
                                 name="buildingImage"
-                                rules={{ required: "هذا الحقل مطلوب في حالة التنفيذ" }}
+                                // rules={{ required: "هذا الحقل مطلوب في حالة التنفيذ" }}
+                                rules={{
+                                    validate: (value) => {
+                                        const hasImage = value?.length > 0;
+                                        const hasVideo = getValues("video")?.length > 0;
+
+                                        return hasImage || hasVideo
+                                            ? true
+                                            : "يجب إضافة صورة المبنى إذا لم يوجد فيديو";
+                                    }
+                                }}
                                 render={({ field }) => (
                                     <Input
                                         type="file"
@@ -366,7 +378,16 @@ function OrderForm({
                             <Controller
                                 control={control}
                                 name="images"
-                                rules={{ required: "الصور مطلوبة في حالة التنفيذ" }}
+                                rules={{
+                                    validate: (value) => {
+                                        const hasImages = value?.length > 0;
+                                        const hasVideo = getValues("video")?.length > 0;
+
+                                        return hasImages || hasVideo
+                                            ? true
+                                            : "يجب إضافة صور التنفيذ إذا لم يوجد فيديو";
+                                    }
+                                }}
                                 render={({ field }) => (
                                     <Input
                                         type="file"
@@ -397,6 +418,45 @@ function OrderForm({
                                     ))}
 
                                 </div>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label>فيديو التنفيذ</Label>
+
+                            <Controller
+                                control={control}
+                                name="video"
+                                rules={{
+                                    validate: (value) => {
+                                        const hasImages = value?.length > 0;
+                                        const hasVideo = getValues("images")?.length > 0;
+
+                                        return hasImages || hasVideo
+                                            ? true
+                                            : "يجب إضافة فيديو التنفيذ إذا لم يوجد صور";
+                                    }
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        type="file"
+                                        accept="video/mp4,video/webm,video/quicktime"
+                                        onChange={(e) => {
+                                            field.onChange(e.target.files);
+                                        }}
+                                    />
+                                )}
+                            />
+
+                            {video && (
+                                <video
+                                    src={
+                                        typeof video[0] === "string"
+                                            ? getImageUrl(video)
+                                            : URL.createObjectURL(video[0])
+                                    }
+                                    controls
+                                    className="w-full max-h-80 rounded-lg border"
+                                />
                             )}
                         </div>
                     </>}

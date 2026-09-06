@@ -2,6 +2,7 @@ import api from "./api"
 import supabase from "./supabase";
 import imageCompression from "browser-image-compression";
 
+const MAX_VIDEO_SIZE = 10 * 1024 * 1024;
 
 export async function getOrders(filter) {
     const res = await api.get(`/daily-orders`, { params: filter })
@@ -62,6 +63,41 @@ export async function uploadImages(images = [], projectId, sendingDate) {
         throw err;
     }
 }
+export async function uploadVideo(video, projectId, sendingDate) {
+    if (!(video instanceof File)) {
+        throw new Error("الفيديو غير صالح");
+    }
+
+    if (!video.type.startsWith("video/")) {
+        throw new Error("الملف يجب أن يكون فيديو");
+    }
+
+
+    // if (video.size > MAX_VIDEO_SIZE) {
+    //     throw new Error("حجم الفيديو يجب ألا يتجاوز 10 ميجابايت");
+    // }
+
+    const { data } = await api.post("/storage/upload-url", {
+        projectId,
+        sendingDate,
+        contentType: video.type,
+        fileSize: video.size,
+    });
+
+    const response = await fetch(data.data.uploadUrl, {
+        method: "PUT",
+        headers: {
+            "Content-Type": video.type,
+        },
+        body: video,
+    });
+
+    if (!response.ok) {
+        throw new Error("حدث خطأ أثناء رفع الفيديو");
+    }
+
+    return data.data.key;
+}
 
 export async function deleteSubabaseImages(images = []) {
     images = images.filter(image => String(image).includes("supabase"))
@@ -84,6 +120,7 @@ export async function deleteSubabaseImages(images = []) {
 export async function createOrder({ projectId, order }) {
     let buildingImage;
     let images = [];
+    let video;
 
     try {
         if (order.buildingImage instanceof FileList) {
@@ -94,12 +131,21 @@ export async function createOrder({ projectId, order }) {
             images = await uploadImages(Array.from(order.images), projectId, order.sendingDate);
         }
 
-        const res = await api.post(`/daily-orders`, { ...order, buildingImage, images })
+        if (order.video instanceof FileList) {
+            video = await uploadVideo(
+                order.video[0],
+                projectId,
+                order.sendingDate
+            );
+        }
+
+        const res = await api.post(`/daily-orders`, { ...order, buildingImage, images, video })
         return res.data
     } catch (err) {
         const keys = [
             ...(images || []),
-            ...(buildingImage ? [buildingImage] : [])
+            ...(buildingImage ? [buildingImage] : []),
+            ...(video ? [video] : [])
         ];
 
         if (keys.length) {
@@ -130,6 +176,12 @@ export async function updateOrder({ projectId, orderID, order }) {
             updatedOrder.images = await uploadImages(Array.from(order.images), projectId, order.sendingDate);
         }
 
+        if (order.video instanceof FileList) {
+            updatedOrder.video = await uploadVideo(order.video[0], projectId, order.sendingDate);
+        }
+
+        console.log(updatedOrder);
+
         const res = await api.patch(`/daily-orders/${orderID}`, updatedOrder)
 
         try {
@@ -145,7 +197,8 @@ export async function updateOrder({ projectId, orderID, order }) {
     catch (err) {
         const keys = [
             ...(updatedOrder.buildingImage ? [updatedOrder.buildingImage] : []),
-            ...updatedOrder.images
+            ...updatedOrder.images,
+            updatedOrder.video
         ];
 
         if (keys.length) {
@@ -162,13 +215,14 @@ export async function updateOrder({ projectId, orderID, order }) {
 }
 
 export async function deleteOrder(order) {
-    const { id: orderID, buildingImage, images = [] } = order
+    const { id: orderID, buildingImage, images = [], video } = order
     const res = await api.delete(`/daily-orders/${orderID}`)
 
     try {
         await deleteSubabaseImages([
             ...(images || []),
             ...(buildingImage ? [buildingImage] : []),
+            ...(video ? [video] : []),
         ]);
     } catch (err) {
         console.error(err);

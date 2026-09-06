@@ -5,7 +5,7 @@ import DeleteOrder from './DeleteOrder'
 import { formatDateWithTime } from '@/src/lib/utils'
 import { ApprovalStatus as approvalS, Roles, StatusOrder } from '@/src/lib/utils/Entities'
 import AuthFeature from '../../components/gards/AuthFeature'
-import ViewOrderImages from './ViewOrderImages'
+import ViewOrderImagesVideo from './ViewOrderImagesVideo'
 import DownloadOrdersPptx from './DownloadOrdersPptx'
 import ApproveRejectOrder from './ApproveRejectOrder'
 
@@ -27,7 +27,7 @@ function statusStyele(status, beforeToday) {
 
 function DailyOrderRow({ order, index, beforeToday }) {
 
-    const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, driverTrip, notes, buildingImage, images, ApprovalStatus } = order
+    const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, driverTrip, notes, buildingImage, images, video, ApprovalStatus } = order
     return (
         <TableRow className={`${statusStyele(status, beforeToday)} `}>
             <TableCell>{index}</TableCell>
@@ -48,7 +48,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell>{notes || ""}</TableCell>
             <TableCell>
                 <div className="flex items-center justify-enter gap-2">
-                    <ViewOrderImages buildingImage={buildingImage} images={images} />
+                    <ViewOrderImagesVideo buildingImage={buildingImage} images={images} video={video} />
                     {(![approvalS.APPROVED, approvalS.REJCTED].includes(ApprovalStatus) &&
                         <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER, Roles.DRIVER, Roles.CONTRACTOR]}>
                             <AddEditOrder dailyOrder={order} />
