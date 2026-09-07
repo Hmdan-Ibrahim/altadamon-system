@@ -45,7 +45,6 @@ function OrderForm({
     const { user } = useAuth()
     const { projects } = useProjects()
     const { isLoading: loadSchools, schools } = useSchools()
-    const { isLoading: loadWells, wells } = useWells()
     const { isCreating, createNewOrder } = useCreateOrder();
     const { isEditing, editOrder } = useEditOrder();
     const isWorking = isCreating || isEditing;
@@ -54,6 +53,7 @@ function OrderForm({
     const [searchParams] = useSearchParams()
     const date = searchParams.get("date")
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id || user?.project
+    const { isLoading: loadWells, wells } = useWells(projectId)
 
     const { control, handleSubmit, watch, reset, getValues, formState } = useForm({
         defaultValues: isEditSession
