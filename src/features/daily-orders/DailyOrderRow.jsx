@@ -31,7 +31,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
     return (
         <TableRow className={`${statusStyele(status, beforeToday)} `}>
             <TableCell>{index}</TableCell>
-            <TableCell>{school.name}</TableCell>
+            <TableCell className={`${school.name?.length && "whitespace-normal min-w-[200px]"}`}>{school.name}</TableCell>
             <TableCell>{supervisor?.name}</TableCell>
             <TableCell className='min-w-fit'>{transporter?.name}</TableCell>
             <TableCell>{vehicle.plateNumber || '-'}</TableCell>
@@ -45,7 +45,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
                 <TableCell>{replyPrice % 1 === 0 ? replyPrice : replyPrice?.toFixed(2) || '-'}</TableCell>
             </AuthFeature>
             <TableCell className={approvalColors[ApprovalStatus]}>{ApprovalStatus}</TableCell>
-            <TableCell>{notes || ""}</TableCell>
+            <TableCell className={`${notes?.length && "whitespace-normal min-w-[200px]"}`}>{notes || ""}</TableCell>
             <TableCell>
                 <div className="flex items-center justify-enter gap-2">
                     <ViewOrderImagesVideo buildingImage={buildingImage} images={images} video={video} />

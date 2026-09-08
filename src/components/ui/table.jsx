@@ -52,7 +52,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
     ref={ref}
     className={cn(
       // "whitespace-nowrap min-w-fit text-cente overflow-hidden h-10 px-2  align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      "whitespace-nowrap min-w-fit text-cente overflow-hidden h-10 px-1  align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "whitespace-nowrap min-w-fit text-cente overflow-hidden h-10 px-1  align-middle font-medium text-muted-foreground print:font-bold print:text-2xl [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props} />
@@ -63,7 +63,7 @@ const TableCell = React.forwardRef(({ className, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
-      "whitespace-nowrap p-1 align-middle min-w-10  [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "whitespace-nowrap p-1 align-middle min-w-10 print:font-bold print:text-2xl [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props} />
