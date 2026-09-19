@@ -36,13 +36,8 @@ export function DashboardLayout() {
     const pathname = useLocation().pathname;
     const navigate = useNavigate()
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const { user, logout } = useAuth()
+    const { isLoggingOut, user, logout } = useAuth()
 
-
-    const handleLogout = () => {
-        logout()
-        navigate("/login")
-    }
 
     return (
         <div className="min-h-screen bg-background">
@@ -93,7 +88,7 @@ export function DashboardLayout() {
 
                     {/* Logout */}
                     <div className="p-4 border-t border-border">
-                        <Button variant="outline" className="w-full justify-start gap-3 hover:bg-destructive" onClick={handleLogout}>
+                        <Button variant="outline" className="w-full justify-start gap-3 hover:bg-destructive" disabled={isLoggingOut} onClick={() => logout()}>
                             {/* < className="w-5 h-5" /> */}
                             <span>تسجيل الخروج</span>
                         </Button>

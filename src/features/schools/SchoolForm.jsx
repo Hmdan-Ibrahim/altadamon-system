@@ -40,7 +40,8 @@ function SchoolForm({
                 district: schoolToEdit?.district || undefined,
                 neighborhood: schoolToEdit?.neighborhood || undefined,
                 ministerialNumber: schoolToEdit?.ministerialNumber || undefined,
-                supervisor: schoolToEdit?.supervisor?._id || undefined
+                supervisor: schoolToEdit?.supervisor?._id || undefined,
+                sex: schoolToEdit?.sex || undefined
             }
             : {
                 project: projectId
@@ -138,6 +139,19 @@ function SchoolForm({
                             )}
                         />
                         {errors.ministerialNumber && <p className="text-red-500 text-sm">{errors.ministerialNumber.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                        <Controller
+                            control={control}
+                            name="sex"
+                            render={({ field }) => (
+                                <FieldSelect label={"الجنس"}
+                                    onChange={field.onChange}
+                                    value={field.value}
+                                    fields={[{ key: "بنين", label: "بنين" }, { key: "بنات", label: "بنات" }]} />
+                            )}
+                        />
+                        {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
                     </div>
                     <div className="space-y-2">
                         <Controller

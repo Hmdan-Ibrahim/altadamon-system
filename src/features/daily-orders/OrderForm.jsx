@@ -150,7 +150,7 @@ function OrderForm({
                                     value={field.value}
                                     onValueChange={field.onChange}
                                     disabled={isWorking || loadSchools}
-                                    selectItems={schools.map(school => ({ key: school._id, label: school.name }))}
+                                    selectItems={schools.map(school => ({ key: school._id, label: `${school.name} (${school?.sex || '-'})` }))}
                                     className={`${errors.school && "border-red-500"}`}
                                 />
                             )}

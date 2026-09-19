@@ -10,6 +10,7 @@ function SchoolsTableHeader() {
                 <TableHead>م</TableHead>
                 <TableHead>اسم المدرسة</TableHead>
                 <TableHead>المشرف</TableHead>
+                <TableHead>الجنس</TableHead>
                 <TableHead>المنطقة</TableHead>
                 <TableHead>الحي</TableHead>
                 <TableHead>الرقم الوزاري</TableHead>
