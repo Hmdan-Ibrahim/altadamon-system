@@ -3,13 +3,14 @@ import { useState } from 'react'
 import { handleError } from '@/src/services/api/api';
 import { Search } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
-import ScheduleTableRow from './ScheduleTableRow';
+// import ScheduleTableRow from './ScheduleTableRow';
 import AddEditScheduleSchool from './AddEditScheduleSchool';
 import { format, getDaysInMonth } from 'date-fns';
 import HeaderTable from './HeaderTable';
 import ReadExelFile from '@/src/components/ReadExelFile';
 import { useSchools } from '../schools/useSchools';
 import { useSearchParams } from 'react-router-dom';
+import ScheduleTableRow from './ScheduleTableRow copy';
 
 function ScheduleTable() {
     const [searchTerm, setSearchTerm] = useState("")
@@ -56,7 +57,7 @@ function ScheduleTable() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredReports?.map((report, index) => <ScheduleTableRow key={index} schoolId={schools.find(school => school.name === report.school)?._id} date={date} Days={Days} report={report} index={index + 1} />)
+                            filteredReports?.map((report, index) => <ScheduleTableRow key={index} school1={schools.find(school => school.name === report.school)} date={date} Days={Days} report={report} index={index + 1} />)
                         )
                         }
                     </TableBody>

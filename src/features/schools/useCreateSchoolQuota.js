@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import { useProjects } from "../projects/useProjects";
 import { useAuth } from "@/src/hooks/useAuth";
+import { createSchoolQouta } from "@/src/services/api/schoolQouta";
 
-export const useCreateSchool = () => {
+export const useCreateSchoolQouta = () => {
     const { user } = useAuth()
     const queryClient = useQueryClient();
 
@@ -14,17 +15,17 @@ export const useCreateSchool = () => {
     const { projects, error } = useProjects()
     const projectId = projects?.find(project => project.name === searchParams.get("project"))?._id || user?.project
 
-    const { isPending: isCreating, mutate: createNewSchool } = useMutation({
+    const { isPending: isCreatingQouta, mutate: createNewSchoolQouta } = useMutation({
         mutationFn: async (data) => {
-            const res = await createSchool({ ...data, project: projectId })
+            const res = await createSchoolQouta(data)
             return res
         },
         onSuccess: (data) => {
             toast.success(data.message);
-            queryClient.invalidateQueries({ queryKey: ["schools"] });
+            queryClient.invalidateQueries({ queryKey: ["schools-quota"] });
         },
         onError: (err) => toast.error(handleError(err)),
     })
 
-    return { isCreating, createNewSchool }
+    return { isCreatingQouta, createNewSchoolQouta }
 }

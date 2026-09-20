@@ -28,6 +28,8 @@ function ReportsTableHeader({ Days, reportType }) {
                 </>}
                 {isTransporter && <TableHead>اجمالي <br /> الردود</TableHead>}
                 <TableHead>اطنان <br /> الشهرية</TableHead>
+                {!isTransporter && <TableHead>الكمية<br /> الشهرية  </TableHead>}
+                {!isTransporter && <TableHead>الكمية<br /> المتبقية </TableHead>}
 
                 {
                     (["تقرير شهري", "استحقاق المشروع"].includes(reportType) && isTransporter) && <>
