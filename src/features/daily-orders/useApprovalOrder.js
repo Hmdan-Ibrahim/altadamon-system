@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export const useApprovalOrder = () => {
     const queryClient = useQueryClient();
 
-    const { isPending: isApproval, mutate: approvalOrder } = useMutation({
+    const { isPending, mutate: approvalOrder } = useMutation({
         mutationFn: ApprovalOrder,
         onSuccess: (data) => {
             toast.success(data.message);
@@ -15,5 +15,5 @@ export const useApprovalOrder = () => {
         onError: (err) => toast.error(handleError(err)),
     })
 
-    return { isApproval, approvalOrder }
+    return { isPending, approvalOrder }
 }

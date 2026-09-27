@@ -6,6 +6,8 @@ import { Roles } from "@/src/lib/utils/Entities";
 import SelectReportType from "./SelectReportType";
 import SelectReportOrdersType from "./SelectReportOrdersType";
 import SelectGroupBy from "./SelectGroupBy";
+import SelectApprovalState from "./SelectApprovalStatus";
+import SelectApprovalStatus from "./SelectApprovalStatus";
 
 function ReportsTableOperations() {
 
@@ -21,6 +23,9 @@ function ReportsTableOperations() {
             <SelectReportType />
             <SelectReportOrdersType />
             <SelectGroupBy />
+            <ForRoles>
+                <SelectApprovalStatus />
+            </ForRoles>
         </div>
     );
 }

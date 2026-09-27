@@ -20,5 +20,5 @@ export const StatusOrder = {
 export const ApprovalStatus = {
     UNDER_REVIEW: "قيد المراجعة",
     APPROVED: "تم الاعتماد",
-    REJCTED: "مرفوض"
+    REJECTED: "مرفوض"
 }

@@ -8,6 +8,7 @@ import AuthFeature from '../../components/gards/AuthFeature'
 import ViewOrderImagesVideo from './ViewOrderImagesVideo'
 import DownloadOrdersPptx from './DownloadOrdersPptx'
 import ApproveRejectOrder from './ApproveRejectOrder'
+import { useAuth } from '@/src/hooks/useAuth'
 
 const approvalColors = {
     [approvalS.UNDER_REVIEW]:
@@ -16,7 +17,7 @@ const approvalColors = {
     [approvalS.APPROVED]:
         "bg-green-100 text-green-700 border border-green-200",
 
-    [approvalS.REJCTED]:
+    [approvalS.REJECTED]:
         "bg-red-100 text-red-700 border border-red-200",
 }
 
@@ -26,8 +27,9 @@ function statusStyele(status, beforeToday) {
 }
 
 function DailyOrderRow({ order, index, beforeToday }) {
-
+    const { user } = useAuth()
     const { _id: dailyOrderId, school, status, orderType, executionTime, supervisor, operator, transporter, vehicle = {}, RequiredCapacity, well, replyPrice, driverTrip, notes, buildingImage, images, video, ApprovalStatus } = order
+
     return (
         <TableRow className={`${statusStyele(status, beforeToday)} `}>
             <TableCell>{index}</TableCell>
@@ -47,21 +49,21 @@ function DailyOrderRow({ order, index, beforeToday }) {
             <TableCell className={approvalColors[ApprovalStatus]}>{ApprovalStatus}</TableCell>
             <TableCell className={`${notes?.length && "whitespace-normal min-w-[200px]"}`}>{notes || ""}</TableCell>
             <TableCell>
-                <div className="flex items-center justify-enter gap-2">
+                <div className="flex items-center justify-center gap-2">
                     <ViewOrderImagesVideo buildingImage={buildingImage} images={images} video={video} />
-                    {(![approvalS.APPROVED, approvalS.REJCTED].includes(ApprovalStatus) &&
+                    {((![approvalS.APPROVED, approvalS.REJECTED].includes(ApprovalStatus) || user.role === Roles.ADMIN) &&
                         <AuthFeature withoutRoles={[Roles.MANAGER, Roles.REGION_MANAGER, Roles.DRIVER, Roles.CONTRACTOR]}>
                             <AddEditOrder dailyOrder={order} />
-                            {/* <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]}> */}
-                            <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
-                            {/* </AuthFeature> */}
+                            <AuthFeature withoutRoles={[Roles.DRIVER, Roles.CONTRACTOR]}>
+                                <DeleteOrder dailyOrderName={name} dailyOrder={{ id: dailyOrderId, buildingImage, images }} />
+                            </AuthFeature>
                         </AuthFeature>
                     )}
                 </div>
                 {
-                    (![approvalS.APPROVED, approvalS.REJCTED].includes(ApprovalStatus) && status == StatusOrder.IMPLEMENTED) &&
+                    ((![approvalS.APPROVED, approvalS.REJECTED].includes(ApprovalStatus) || user.role === Roles.ADMIN) && status == StatusOrder.IMPLEMENTED) &&
                     <AuthFeature roles={[Roles.REGION_MANAGER]}>
-                        <ApproveRejectOrder orderID={dailyOrderId} />
+                        <ApproveRejectOrder orderID={dailyOrderId} currentApprovalStatus={ApprovalStatus} />
                     </AuthFeature>
                 }
                 {

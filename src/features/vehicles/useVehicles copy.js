@@ -31,7 +31,7 @@ export const useVehicles = (capacity) => {
             const { data } = await getVehicles(filter)
             return (data && filterValue ? data : [])
         },
-        enabled: !loadingProjects && projects.length > 0, // حتى لا يُستدعى قبل تحميل المشروع
+        enabled: !loadingProjects && projects.length > 0,
     })
 
     return { isLoading, vehicles, error }
