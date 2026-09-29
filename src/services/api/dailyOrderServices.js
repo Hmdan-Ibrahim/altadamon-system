@@ -180,8 +180,6 @@ export async function updateOrder({ projectId, orderID, order }) {
             updatedOrder.video = await uploadVideo(order.video[0], projectId, order.sendingDate);
         }
 
-        console.log(updatedOrder);
-
         const res = await api.patch(`/daily-orders/${orderID}`, updatedOrder)
 
         try {
@@ -248,7 +246,6 @@ export async function downloadOrdersPptx(filter, socketId) {
 }
 
 export async function ApprovalOrder({ orderID, approvalStatus: ApprovalStatus }) {
-    console.log(orderID, ApprovalStatus);
     const res = await api.patch(`/daily-orders/${orderID}/approval`, { ApprovalStatus: ApprovalStatus });
 
     return res.data;

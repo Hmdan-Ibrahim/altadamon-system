@@ -37,7 +37,6 @@ function ScheduleTableRow({ school1, date, Days, report, index }) {
     }
     const handleCreateQuota = () => {
 
-        console.log(formatDayMonthYear("9 1 2026"));
         createNewSchoolQouta({ school: school1._id, startDate: "2026-09-01", endDate: "2027-04-30", monthlyQuantity });
     }
 

@@ -8,11 +8,11 @@ import { cn } from '@/src/lib/utils';
 const getStatusLabel = (status) => {
     switch (status) {
         case ApprovalStatus.APPROVED:
-            return "اعتماد";
+            return ApprovalStatus.APPROVED;
         case ApprovalStatus.UNDER_REVIEW:
-            return "قيد المراجعة";
+            return ApprovalStatus.UNDER_REVIEW;
         case ApprovalStatus.REJECTED:
-            return "رفض";
+            return ApprovalStatus.REJECTED;
         default:
             return "";
     }

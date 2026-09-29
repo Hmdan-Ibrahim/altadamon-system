@@ -67,7 +67,7 @@ function DailyOrderRow({ order, index, beforeToday }) {
                     </AuthFeature>
                 }
                 {
-                    status == StatusOrder.IMPLEMENTED &&
+                    (status == StatusOrder.IMPLEMENTED && ApprovalStatus == approvalS.APPROVED) &&
                     <AuthFeature roles={[Roles.REGION_MANAGER, Roles.PROJECT_MANAGER, Roles.SUPERVISOR]}>
                         <DownloadOrdersPptx filter={{ school: school._id, orderID: dailyOrderId }} title="تحميل تقرير المدرسة" />
                     </AuthFeature>

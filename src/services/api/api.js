@@ -28,7 +28,7 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     const isLoginRequest =
       error.config?.url?.includes("/auth/login");
     if (error.response?.status === 401 && !isLoginRequest) {
@@ -36,10 +36,33 @@ api.interceptors.response.use(
       localStorage.removeItem("user")
       window.location.href = "/login"
       toast.error("انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى")
-    } else if (error.response?.data?.data?.message || error.response?.data?.message) {
-      toast.error(error.response?.data?.data?.message || error.response.data.message)
-    } else {
-      toast.error("حدث خطأ. يرجى المحاولة مرة أخرى")
+      return Promise.reject(error)
+    }
+    let errorData = error.response?.data;
+
+    if (errorData instanceof Blob) {
+      try {
+        const text = await errorData.text();
+        errorData = JSON.parse(text);
+      } catch (e) {
+        errorData = null;
+      }
+    }
+    const serverMessage =
+      errorData?.message ||
+      error.response?.data?.data?.message ||
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      (Array.isArray(error.response?.data?.errors) ? error.response?.data?.errors[0]?.msg : null);
+
+    if (serverMessage) {
+      toast.error(serverMessage);
+    }
+    else if (error.code === "ERR_NETWORK" || !error.response) {
+      toast.error("تأكد من الاتصال بالإنترنت أو محاولة الوصول للسيرفر");
+    }
+    else {
+      toast.error("حدث خطأ. يرجى المحاولة مرة أخرى");
     }
     return Promise.reject(error)
   },

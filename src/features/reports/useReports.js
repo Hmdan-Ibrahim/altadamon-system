@@ -38,7 +38,6 @@ export const useReports = () => {
     groupBy = groupByItems.find(g => g.label === groupBy)?.key || "transporter"
     const matchedProject = projects.find(p => p.name === project)?._id || user?.project;
     const filter = { project: matchedProject, sendingDate: date, status: StatusOrder.IMPLEMENTED, ...(user.role == Roles.ADMIN && { approvalStatus }), groupBy, ordersType };
-    console.log({ filter });
 
     const { isLoading, data: reports = [], error } = useQuery({
         queryKey: ["reports", { ...filter, sendingDate: '', date: format(date, "MM yyyy") }],
